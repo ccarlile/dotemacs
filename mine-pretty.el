@@ -26,4 +26,4 @@
 (use-package ranger
   :ensure t)
 
-(provide 'mine-rice)
+(provide 'mine-pretty)

@@ -15,7 +15,7 @@
 (require 'mine-langs)
 (require 'mine-navigation)
 (require 'mine-platform)
-(require 'mine-rice)
+(require 'mine-pretty)
 (require 'mine-vc)
 (require 'mine-evil)
 
