@@ -1,8 +1,9 @@
 (use-package yasnippet
   :ensure t
+  :init
+  (setq yas-snippet-dirs '("~/emacs/snippets"))
   :config
-  (yas-global-mode 1)
-  )
+  (yas-global-mode 1))
 
 (use-package smartparens
   :ensure t

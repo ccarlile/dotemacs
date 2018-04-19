@@ -11,14 +11,13 @@
 
 (add-to-list 'load-path (concat (getenv "HOME") "/emacs"))
 
-(require 'mine-code)
 (require 'mine-langs)
+(require 'mine-code)
 (require 'mine-navigation)
 (require 'mine-platform)
 (require 'mine-pretty)
 (require 'mine-vc)
 (require 'mine-evil)
-
 
 
 (custom-set-variables

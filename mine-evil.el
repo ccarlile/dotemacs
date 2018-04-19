@@ -81,6 +81,8 @@
     (define-key evil-normal-state-map (kbd "SPC g r") 'browse-at-remote)
     (define-key evil-normal-state-map [backspace] 'evil-switch-to-windows-last-buffer)
     (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
+    (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
+
 
     (use-package evil-escape
       :ensure t
