@@ -21,6 +21,7 @@
   :commands helm-ag helm-projectile-ag)
 
 (use-package projectile
+  :diminish "🔫"
   :ensure t
   :config
   (projectile-global-mode)
@@ -34,5 +35,15 @@
 (use-package dumb-jump
   :ensure t
   )
+
+(use-package avy
+  :ensure t
+  )
+
+(when (fboundp 'winner-mode)
+  (winner-mode 1))
+
+(diminish 'winner-mode)
+
 
 (provide 'mine-navigation)

@@ -2,6 +2,7 @@
 (setq evil-want-integration nil)
 (use-package evil
     :ensure t ;; install the evil package if not installed
+    :diminish "😈"
     :init ;; tweak evil's configuration before loading it
     (setq evil-search-module 'evil-search)
     (setq evil-ex-complete-emacs-commands nil)
@@ -37,8 +38,11 @@
 	"h f" 'describe-function
 
 	;; comment/code prefix
-	"c l" 'comment-line
+	"c l" 'evil-commentary-line
 	"c d" 'comment-dwim
+
+	;; jump prefix
+	"j j" 'avy-goto-char
 
 	;; lisp prefix
 	"l f" 'load-file
@@ -55,6 +59,7 @@
 
 	;; general toggles
 	"t z" 'zoom-mode
+	"t t" 'helm-themes
 	
 	;; general prefix
 	"SPC" 'helm-M-x))
@@ -82,9 +87,11 @@
     (define-key evil-normal-state-map [backspace] 'evil-switch-to-windows-last-buffer)
     (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
     (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
+    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
 
 
     (use-package evil-escape
+      :diminish
       :ensure t
       :config
       (setq-default evil-escape-key-sequence "jk")
@@ -97,10 +104,13 @@
       (global-evil-surround-mode))
 
     (use-package evil-commentary
+      :diminish "💬"
+      :ensure t
       :after evil
       :config (evil-commentary-mode))
 
     (use-package evil-matchit
+      :ensure t
       :after evil
       :config (global-evil-matchit-mode))
 
@@ -110,8 +120,18 @@
       :config
       (evil-collection-init))
 
+    (use-package evil-avy
+      :after evil
+      :ensure t
+      :config (evil-avy-mode))
+
+    (use-package evil-iedit
+      :after (evil iedit)
+      :ensure t)
+
     (use-package evil-magit
       :ensure t
       :after (evil magit)))
+
 
 (provide 'mine-evil)

@@ -1,5 +1,6 @@
 (use-package yasnippet
   :ensure t
+  :diminish (yas-minor-mode . "✂️")
   :init
   (setq yas-snippet-dirs '("~/emacs/snippets"))
   :config
@@ -13,6 +14,7 @@
 
 (use-package company
   :ensure t
+  :diminish "💼"
   :defer t
   :init (global-company-mode)
   :config
@@ -23,6 +25,7 @@
 (global-linum-mode t)
 
 (use-package flycheck
+  :diminish "✅"
   :ensure t
   :init (global-flycheck-mode))
 
@@ -36,5 +39,9 @@
 (setq tab-width 4)
 
 (setq org-src-fontify-natively t)
+
+(use-package iedit
+  :diminish
+  :ensure t)
 
 (provide 'mine-code)
