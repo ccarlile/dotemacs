@@ -26,4 +26,15 @@
   :ensure t
   :init (global-flycheck-mode))
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((scala . t)
+   ;; (javascript . t)
+   (python . t))
+ )
+
+(setq tab-width 4)
+
+(setq org-src-fontify-natively t)
+
 (provide 'mine-code)
