@@ -29,8 +29,8 @@
 ;;   (custom-set-variables
 ;;    '(zoom-mode t)))
 
-(set-face-attribute 'default nil :font  "Hasklig-11")
-(set-frame-font "Hasklig-11" nil t)
+(set-face-attribute 'default nil :font  "Hasklig-9")
+(set-frame-font "Hasklig-9" nil t)
 
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)

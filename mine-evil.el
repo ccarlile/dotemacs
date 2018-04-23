@@ -109,10 +109,10 @@
       :after evil
       :config (evil-commentary-mode))
 
-    (use-package evil-matchit
-      :ensure t
-      :after evil
-      :config (global-evil-matchit-mode))
+    ;; (use-package evil-matchit
+    ;;   :ensure t
+    ;;   :after evil
+    ;;   :config (global-evil-matchit-mode))
 
     (use-package evil-collection
       :after evil
@@ -125,9 +125,14 @@
       :ensure t
       :config (evil-avy-mode))
 
-    (use-package evil-iedit
-      :after (evil iedit)
-      :ensure t)
+    (use-package evil-multiedit
+      :after evil
+      :ensure t
+      :config (evil-multiedit-default-keybinds)
+      )
+    ;; (use-package evil-iedit
+    ;;   :after (evil iedit)
+    ;;   :ensure t)
 
     (use-package evil-magit
       :ensure t

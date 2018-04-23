@@ -1,0 +1,7 @@
+# Author: Chris Carlile
+# name: boilerplate
+# key: pa
+# --
+package ${1:name}
+
+import $0
