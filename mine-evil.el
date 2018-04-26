@@ -50,6 +50,7 @@
 	;; projectile prefix
 	"p f" 'helm-projectile-find-file
 	"p p" 'helm-projectile-switch-project
+	"p i" 'projectile-invalidate-cache
 
 	;; search prefix
 	"s f" 'helm-do-ag
@@ -89,9 +90,10 @@
     (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
 
+    (define-key evil-motion-state-map "\t" nil)
+
 
     (use-package evil-escape
-      :diminish
       :ensure t
       :config
       (setq-default evil-escape-key-sequence "jk")
