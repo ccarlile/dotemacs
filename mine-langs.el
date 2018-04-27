@@ -29,6 +29,11 @@
 					  (string= (file-name-extension buffer-file-name) "sbt"))
 				     (flycheck-mode -1)))))
   )
+(use-package json-mode
+  :ensure t
+  :config
+  (add-hook 'json-mode-hook '(lambda ()
+                               (setq tab-width 2))))
 
 
 (provide 'mine-langs)

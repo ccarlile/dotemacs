@@ -44,4 +44,7 @@
   :diminish
   :ensure t)
 
+;; Tabs are bad, mkay?
+(setq-default indent-tabs-mode nil)
+
 (provide 'mine-code)
