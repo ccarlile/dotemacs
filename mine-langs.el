@@ -32,7 +32,9 @@
 (use-package json-mode
   :ensure t
   :config
-  (add-hook 'json-mode-hook '(lambda ()
+  (add-hook 'json-mode-hook (lambda ()
+                               (make-local-variable 'js-indent-level)
+                               (setq js-indent-level 2)
                                (setq tab-width 2))))
 
 
