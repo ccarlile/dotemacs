@@ -11,6 +11,7 @@
 
 (add-to-list 'load-path (concat (getenv "HOME") "/emacs"))
 
+(require 'mine-emacs)
 (require 'mine-langs)
 (require 'mine-code)
 (require 'mine-navigation)
@@ -18,9 +19,6 @@
 (require 'mine-pretty)
 (require 'mine-vc)
 (require 'mine-evil)
-
-(use-package diminish
-  :ensure t)
 
 
 (custom-set-variables

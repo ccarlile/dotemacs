@@ -18,7 +18,7 @@
 (use-package golden-ratio
   :ensure t
   :diminish "🏆"
-  :config
+  :init
   (golden-ratio-mode 1))
 
 (setq ring-bell-function 'ignore)

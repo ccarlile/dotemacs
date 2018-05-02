@@ -3,7 +3,8 @@
   :ensure t
   :diminish helm-mode
   :init
-  (setq helm-display-header-line nil))
+  (setq helm-display-header-line nil)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
 
 (use-package ag
   :ensure t
