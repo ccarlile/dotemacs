@@ -9,15 +9,19 @@
       (package-install 'use-package))
 (require 'use-package)
 
-(add-to-list 'load-path (concat (getenv "HOME") "/emacs"))
+
+(setq mine-emacs-root-directory "/emacs")
+
+(add-to-list 'load-path (concat (getenv "HOME") mine-emacs-root-directory))
 
 (require 'mine-emacs)
 (require 'mine-langs)
 (require 'mine-code)
 (require 'mine-navigation)
-(require 'mine-platform)
 (require 'mine-pretty)
+(require 'mine-platform)
 (require 'mine-vc)
+;; (require 'mine-extras)
 (require 'mine-evil)
 
 
@@ -32,8 +36,7 @@
  '(golden-ratio-mode t)
  '(package-selected-packages
    (quote
-    (evil-iedit iedit evil-avy avy smart-mode-line helm-themes golden-ratio evil-matchit evil-commentary solarized-theme dumb-jump browse-at-remote evil-magit ensime linum-relative helm-projectile evil-collection magit smartparens evil-escape zenburn-theme evil use-package)))
- '(zoom-mode nil nil (zoom)))
+    (xresources-theme dashboard evil-iedit iedit evil-avy avy smart-mode-line helm-themes golden-ratio evil-matchit evil-commentary solarized-theme dumb-jump browse-at-remote evil-magit ensime linum-relative helm-projectile evil-collection magit smartparens evil-escape zenburn-theme evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

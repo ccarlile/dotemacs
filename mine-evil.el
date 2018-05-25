@@ -46,6 +46,7 @@
 
 	;; lisp prefix
 	"l f" 'load-file
+        "l s" 'eval-last-sexp
 
 	;; projectile prefix
 	"p f" 'helm-projectile-find-file
@@ -59,7 +60,7 @@
 	"s s" 'helm-swoop
 
 	;; general toggles
-	"t z" 'zoom-mode
+	;; "t z" 'zoom-mode
 	"t t" 'helm-themes
         "t g" 'golden-ratio
 	
