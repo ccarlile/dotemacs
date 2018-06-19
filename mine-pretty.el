@@ -15,11 +15,11 @@
 (tool-bar-mode -1)
 
 ;; the best way I've found is to just call golden-ratio
-(use-package golden-ratio
-  :ensure t
-  :diminish "🏆"
-  :init
-  (golden-ratio-mode 1))
+;; (use-package golden-ratio
+;;   :ensure t
+;;   :diminish "🏆"
+;;   :init
+;;   (golden-ratio-mode 1))
 
 (setq ring-bell-function 'ignore)
 
@@ -31,9 +31,6 @@
 
 (set-face-attribute 'default nil :font  "Hasklig-10")
 (set-frame-font "Hasklig-10" nil t)
-
-(set-face-attribute 'mode-line nil :box nil)
-(set-face-attribute 'mode-line-inactive nil :box nil)
 
 (use-package ranger
   :ensure t)
@@ -94,6 +91,10 @@ codepoints starting from codepoint-start."
   (prettify-symbols-mode))
 
 (add-hook 'scala-mode-hook 'my-set-hasklig-ligatures)
+
+(set-face-attribute 'mode-line nil :box nil)
+(set-face-attribute 'mode-line-inactive nil :box nil)
+
 
 (provide 'mine-pretty)
 
