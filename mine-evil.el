@@ -37,9 +37,11 @@
 	"h k" 'describe-key
 	"h f" 'describe-function
 
-	;; comment/code prefix
+	;; comment/code/compile prefix
 	"c l" 'evil-commentary-line
 	"c d" 'comment-dwim
+        "c n" 'next-error
+        "c p" 'previous-error
 
 	;; jump prefix
 	"j j" 'avy-goto-char
