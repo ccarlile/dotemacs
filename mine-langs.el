@@ -7,8 +7,6 @@
          ("\\.sc\\'" . scala-mode))
   :config
   (progn
-    ;; give this guy a spin
-    (add-hook 'scala-mode-hook 'c-subword-mode)
     (setq scala-indent:align-parameters t)
     (setq scala-indent:align-forms t)))
 
@@ -36,6 +34,7 @@
                                (make-local-variable 'js-indent-level)
                                (setq js-indent-level 2)
                                (setq tab-width 2))))
+
 
 
 (provide 'mine-langs)

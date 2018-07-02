@@ -48,6 +48,7 @@
 
 	;; lisp prefix
 	"l f" 'load-file
+        "l s" 'eval-last-sexp
 
 	;; projectile prefix
 	"p f" 'helm-projectile-find-file
@@ -61,14 +62,27 @@
 	"s s" 'helm-swoop
 
 	;; general toggles
-	"t z" 'zoom-mode
+	;; "t z" 'zoom-mode
 	"t t" 'helm-themes
+        "t g" 'golden-ratio
 	
 	;; general prefix
 	"SPC" 'helm-M-x))
 
     :config ;; tweak evil after loading it
     (evil-mode)
+
+    (defun evil-window-up-and-resize ()
+      "Calls evil-window-up and subsuquently golden-ratio"
+      (interactive)
+      (evil-window-up 1)
+      (golden-ratio))
+    
+    (defun evil-window-down-and-resize ()
+      "Calls evil-window-down and subsuquently golden-ratio"
+      (interactive)
+      (evil-window-down 1)
+      (golden-ratio))
 
     ;; muh speshul keybinds
     (define-key evil-normal-state-map (kbd ";") 'evil-ex)
