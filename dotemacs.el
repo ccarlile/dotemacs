@@ -22,6 +22,7 @@
 (require 'mine-platform)
 (require 'mine-vc)
 (require 'mine-extras)
+(require 'mine-plaintext)
 (require 'mine-evil)
 
 
