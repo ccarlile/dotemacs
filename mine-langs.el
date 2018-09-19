@@ -35,6 +35,19 @@
                                (setq js-indent-level 2)
                                (setq tab-width 2))))
 
+(use-package haskell-mode
+  :ensure t)
+
+(use-package intero
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook 'intero-mode))
+
+(use-package fsharp-mode
+  :ensure t)
+
+(use-package elm-mode
+  :ensure t)
 
 
 (provide 'mine-langs)

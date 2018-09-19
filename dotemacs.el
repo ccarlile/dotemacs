@@ -23,6 +23,7 @@
 (require 'mine-vc)
 (require 'mine-extras)
 (require 'mine-evil)
+(require 'mine-majors)
 
 
 (custom-set-variables

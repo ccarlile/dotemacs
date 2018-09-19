@@ -35,15 +35,24 @@
 (use-package ranger
   :ensure t)
 
+
 (use-package smart-mode-line
   :ensure t
   :config
-  (sml/setup))
+  (sml/setup)
+  (setq mode-line-format
+        (list mode-line-front-space mode-line-modified mode-line-buffer-identification sml/pos-id-separator mode-line-position vc-mode sml/pos-id-separator mode-line-modes mode-line-misc-info mode-line-end-spaces)))
+
+;; My modeline
 
 (diminish 'undo-tree-mode)
 (diminish 'auto-revert-mode)
 
 (use-package fontawesome
+  :ensure t
+  :diminish)
+
+(use-package octicons
   :ensure t
   :diminish)
 

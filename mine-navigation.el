@@ -22,7 +22,7 @@
   :commands helm-ag helm-projectile-ag)
 
 (use-package projectile
-  :diminish "🔫"
+  :diminish
   :ensure t
   :config
   (projectile-global-mode)
@@ -45,6 +45,7 @@
   (winner-mode 1))
 
 (diminish 'winner-mode)
+(diminish 'eldoc-mode)
 
 
 (provide 'mine-navigation)

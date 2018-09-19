@@ -1,6 +1,6 @@
 (use-package yasnippet
   :ensure t
-  :diminish (yas-minor-mode . "✂️")
+  :diminish (yas-minor-mode . "")
   :init
   (setq yas-snippet-dirs '("~/emacs/snippets"))
   :config
@@ -14,10 +14,11 @@
 
 (use-package company
   :ensure t
-  :diminish "💼"
+  :diminish
   :defer t
   :init (global-company-mode)
   :config
+  (add-to-list 'company-backends 'company-elm)
   (setq company-dabbrev-downcase 0)
   (setq company-idle-delay 0))
 
@@ -25,7 +26,7 @@
 (global-linum-mode t)
 
 (use-package flycheck
-  :diminish "✅"
+  :diminish
   :ensure t
   :init (global-flycheck-mode))
 

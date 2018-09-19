@@ -36,10 +36,12 @@
 	;; help prefix
 	"h k" 'describe-key
 	"h f" 'describe-function
+        "h v" 'describe-variable
 
 	;; comment/code prefix
 	"c l" 'evil-commentary-line
 	"c d" 'comment-dwim
+        
 
 	;; jump prefix
 	"j j" 'avy-goto-char
@@ -109,6 +111,7 @@
 
     (use-package evil-escape
       :ensure t
+      :diminish
       :config
       (setq-default evil-escape-key-sequence "jk")
       (setq-default evil-escape-unordered-key-sequence t)
@@ -120,7 +123,7 @@
       (global-evil-surround-mode))
 
     (use-package evil-commentary
-      :diminish "💬"
+      :diminish
       :ensure t
       :after evil
       :config (evil-commentary-mode))
