@@ -38,10 +38,11 @@
 	"h f" 'describe-function
         "h v" 'describe-variable
 
-	;; comment/code prefix
+	;; comment/code/compile prefix
 	"c l" 'evil-commentary-line
 	"c d" 'comment-dwim
-        
+        "c n" 'next-error
+        "c p" 'previous-error
 
 	;; jump prefix
 	"j j" 'avy-goto-char
