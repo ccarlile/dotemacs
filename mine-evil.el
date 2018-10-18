@@ -2,7 +2,7 @@
 (setq evil-want-integration nil)
 (use-package evil
     :ensure t ;; install the evil package if not installed
-    :diminish "😈"
+    :diminish
     :init ;; tweak evil's configuration before loading it
     (setq evil-search-module 'evil-search)
     (setq evil-ex-complete-emacs-commands nil)
@@ -10,6 +10,7 @@
     (setq evil-split-window-below t)
     (setq evil-shift-round nil)
     (setq evil-want-C-u-scroll t)
+    (setq evil-want-Y-yank-to-eol t)
 
     (use-package evil-leader
       :ensure t
@@ -23,6 +24,7 @@
 	;; git prefix
 	"g s" 'magit-status
 	"g r" 'browse-at-remote
+        "g b" 'magit-blame
 
 	;; buffer prefix
 	"b b" 'helm-mini
@@ -50,6 +52,7 @@
 	;; lisp prefix
 	"l f" 'load-file
         "l s" 'eval-last-sexp
+        "l e" 'eval-expression
 
 	;; projectile prefix
 	"p f" 'helm-projectile-find-file
