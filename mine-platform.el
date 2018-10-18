@@ -16,6 +16,8 @@
     (message "OSX")))
  ((string-equal system-type "gnu/linux")
   (progn
+    (setq exec-path (append exec-path '("/usr/local/bin")))
+    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
     (message "Linucks"))))
 
 ;; (use-package osx

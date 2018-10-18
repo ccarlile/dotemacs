@@ -65,6 +65,7 @@
 	;; general toggles
 	;; "t z" 'zoom-mode
 	"t t" 'helm-themes
+        "t n" 'global-linum-mode
         "t g" 'golden-ratio
 	
 	;; general prefix
@@ -106,6 +107,9 @@
     (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
     (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+
 
     (define-key evil-motion-state-map "\t" nil)
 
@@ -138,6 +142,7 @@
       :after evil
       :ensure t
       :config
+      (setq evil-want-keybinding nil)
       (evil-collection-init))
 
     (use-package evil-avy
