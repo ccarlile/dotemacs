@@ -4,7 +4,7 @@
 
 clone this directory to ~/emacs
 ```
-git clone git@github.com:ccarlile/emacs-config ~/emacs
+git clone git@github.com:ccarlile/dotemacs ~/emacs
 ```
 
 symlink `dotemacs.el` to `~/.emacs`

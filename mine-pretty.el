@@ -2,7 +2,8 @@
 (use-package zenburn-theme
   :ensure t
   :init
-  (load-theme 'zenburn t))
+  ;; (load-theme 'zenburn t)
+  )
 
 (use-package helm-themes
   :ensure t)
@@ -34,7 +35,7 @@
 ;;   (custom-set-variables
 ;;    '(zoom-mode t)))
 
-(set-face-attribute 'default nil :font  "Hasklig-10")
+(set-face-attribute 'default nil :font  "Hasklig-12")
 (set-frame-font "Hasklig-10" nil t)
 
 (use-package ranger
@@ -105,9 +106,13 @@ codepoints starting from codepoint-start."
   (prettify-symbols-mode))
 
 (add-hook 'scala-mode-hook 'my-set-hasklig-ligatures)
+(add-hook 'haskell-mode-hook 'my-set-hasklig-ligatures)
 
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
+
+(use-package centered-window
+  :ensure t)
 
 
 (provide 'mine-pretty)

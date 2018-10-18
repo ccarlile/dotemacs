@@ -18,6 +18,7 @@
 
 (setq mine-paths
       (list (mine-make-path-home "bin/stack")
+            (mine-make-path-home ".local/bin")
             (mine-make-path-home "bin")))
 
 (setq exec-path (append exec-path mine-paths))
