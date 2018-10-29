@@ -53,6 +53,22 @@
 
 (setq org-hide-emphasis-markers t)
 
+(use-package org-mind-map
+  :init
+  (require 'ox-org)
+  :ensure t
+  ;; Uncomment the below if 'ensure-system-packages` is installed
+  ;;:ensure-system-package (gvgen . graphviz)
+  :config
+  (setq org-mind-map-engine "dot")       ; Default. Directed Graph
+  ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
+  ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
+  ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
+  ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
+  ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
+  ;; (setq org-mind-map-engine "circo")  ; Circular Layout
+  )
+
 (visual-line-mode 1)
 
 (setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
@@ -74,6 +90,11 @@
 (setq org-capture-templates
       '(("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org") "* %?\n")
         ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)))
+
+;; GTD-style org keywords
+(setq org-todo-keywords
+  '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED")))
+
 
 
 (provide 'mine-plaintext)

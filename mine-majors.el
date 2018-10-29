@@ -12,7 +12,8 @@
 
 (evil-leader/set-key-for-mode 'org-mode
   "m h" 'org-html-export-to-html
-  "m t" 'org-babel-tangle)
+  "m t" 'org-babel-tangle
+  "m d" 'org-todo)
 
 
 (provide 'mine-majors)
