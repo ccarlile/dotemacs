@@ -28,3 +28,4 @@
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
+(put 'narrow-to-region 'disabled nil)
