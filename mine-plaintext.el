@@ -55,6 +55,25 @@
 
 (visual-line-mode 1)
 
+(setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
+                             "~/Dropbox/org/agenda/inbox.org"
+                             "~/Dropbox/org/agenda/benntoo.org"))
+
+(setq org-default-notes-file "~/Dropbox/org/agenda/inbox.org")
+
+(setq org-refile-targets '((nil :maxlevel . 9)
+                           (org-agenda-files :maxlevel . 9)))
+
+; Refile in a single go
+(setq org-outline-path-complete-in-steps nil)
+
+
+; Show full paths for refiling
+(setq org-refile-use-outline-path t)
+
+(setq org-capture-templates
+      '(("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org") "* %?\n")
+        ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)))
 
 
 (provide 'mine-plaintext)

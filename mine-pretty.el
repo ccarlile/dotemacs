@@ -71,7 +71,8 @@
   (setq dashboard-banner-logo-title "I believe in you!")
   (setq dashboard-startup-banner "~/emacs/lilbub.png")
   (setq dashboard-items '((recents . 10)
-                          (projects . 10)))
+                          (projects . 10)
+                          (agenda . 10)))
   (dashboard-setup-startup-hook))
 
 ;; LIGATURES BABY

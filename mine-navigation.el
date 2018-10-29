@@ -4,7 +4,8 @@
   :diminish helm-mode
   :init
   (setq helm-display-header-line nil)
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (helm-mode 1))
 
 (use-package ag
   :ensure t

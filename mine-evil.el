@@ -28,7 +28,8 @@
 
 	;; buffer prefix
 	"b b" 'helm-mini
-	"b s" 'switch-to-scratch-buffer
+	"b s" '(switch-to-buffer '"*scratch*")
+        "b k" 'kill-buffer
 
 	;; files prefix
 	"f f" 'helm-find-files
@@ -54,6 +55,11 @@
         "l s" 'eval-last-sexp
         "l e" 'eval-expression
 
+        ;; global org prefix (capture and friends)
+        "o c" 'org-capture
+        "o a" 'org-agenda
+        "o s" 'org-schedule
+
 	;; projectile prefix
 	"p f" 'helm-projectile-find-file
 	"p p" 'helm-projectile-switch-project
@@ -72,7 +78,9 @@
         "t g" 'golden-ratio
 	
 	;; general prefix
-	"SPC" 'helm-M-x))
+	"SPC" 'helm-M-x
+        "\\" '(switch-to-buffer '"*dashboard*")
+        ))
 
     :config ;; tweak evil after loading it
     (evil-mode)
@@ -164,7 +172,16 @@
 
     (use-package evil-magit
       :ensure t
-      :after (evil magit)))
+      :after (evil magit))
+
+    (use-package evil-org
+      :ensure t
+      :after org
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode
+                (lambda () evil-org-set-key-theme))
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys)))
 
 
 (provide 'mine-evil)
