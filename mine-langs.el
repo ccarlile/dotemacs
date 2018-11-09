@@ -61,5 +61,10 @@
 (use-package yaml-mode
   :ensure t)
 
+(use-package ess
+  :ensure t
+  )
+
+
 
 (provide 'mine-langs)
