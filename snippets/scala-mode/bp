@@ -1,6 +1,6 @@
 # Author: Chris Carlile
-# name: boilerplate
-# key: pa
+# name: Boilerplate
+# key: bp
 # --
 package ${1:name}
 

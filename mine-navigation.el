@@ -3,7 +3,9 @@
   :ensure t
   :diminish helm-mode
   :init
-  (setq helm-display-header-line nil)
+  (setq helm-display-header-line nil
+        helm-mode-fuzzy-match t
+        helm-completion-in-region-fuzzy-match t)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (helm-mode 1))
 

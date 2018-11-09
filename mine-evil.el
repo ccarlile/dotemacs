@@ -72,10 +72,15 @@
 	"s s" 'helm-swoop
 
 	;; general toggles
-	;; "t z" 'zoom-mode
 	"t t" 'helm-themes
         "t n" 'global-linum-mode
         "t g" 'golden-ratio
+
+        ;; variable prefix
+        "v k" 'string-inflection-kebab-case
+        "v j" 'string-inflection-camelcase
+        "v c" 'string-inflection-lower-camelcase
+        "v p" 'string-inflection-underscore
 	
 	;; general prefix
 	"SPC" 'helm-M-x

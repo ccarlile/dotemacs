@@ -48,4 +48,7 @@
 ;; Tabs are bad, mkay?
 (setq-default indent-tabs-mode nil)
 
+(use-package string-inflection
+  :ensure t)
+
 (provide 'mine-code)
