@@ -3,6 +3,16 @@
   (interactive)
   (sbt-command "compile"))
 
+(defun org-archive-done-tasks ()
+  "Archive all headings in a subtree"
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+   "/DONE|CANCELLED|INACTIVE" 'tree))
+
+
 (evil-leader/set-key-for-mode 'scala-mode
   "m c" 'mine-sbt-compile
   "m s" 'sbt-start)
@@ -11,9 +21,15 @@
   "m r" 'elm-repl-load)
 
 (evil-leader/set-key-for-mode 'org-mode
-  "m h" 'org-html-export-to-html
-  "m t" 'org-babel-tangle
-  "m d" 'org-todo)
+  ;; "X"port
+  "x h" 'org-html-export-to-html
+  "x t" 'org-babel-tangle
+
+  ;; general
+  "m d" 'org-todo
+  "m h" 'org-toggle-heading
+  "m a" 'org-archive-subtree-default
+  "m A" 'org-archive-done-tasks)
 
 
 (provide 'mine-majors)

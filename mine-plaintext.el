@@ -89,6 +89,8 @@
 
 (setq org-capture-templates
       '(("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org") "* %?\n")
+        ("e" "Event" entry (file+headline "~/Dropbox/org/agenda/life.org" "Social Calendar")
+         "* %?                :event:")
         ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)))
 
 ;; GTD-style org keywords
@@ -96,6 +98,11 @@
   '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED")))
 
 
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install)
+  (evil-set-initial-state 'pdf-view-mode 'normal))
 
 (provide 'mine-plaintext)
 

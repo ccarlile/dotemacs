@@ -81,6 +81,14 @@
         "v j" 'string-inflection-camelcase
         "v c" 'string-inflection-lower-camelcase
         "v p" 'string-inflection-underscore
+
+        ;; window prefix
+        "w l" 'evil-window-right
+        "w L" 'evil-window-move-far-right
+        "w h" 'evil-window-left
+        "w H" 'evil-window-move-far-left
+        "w s" 'evil-split-buffer
+        "w v" 'evil-window-vsplit
 	
 	;; general prefix
 	"SPC" 'helm-M-x
