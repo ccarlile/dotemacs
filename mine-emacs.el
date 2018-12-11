@@ -35,4 +35,8 @@
 ;;   (add-to-list 'purpose-user-mode-purposes '(sbt-mode . scala))
 ;; )
 
+(global-auto-revert-mode 1)
+
+(add-hook 'dired-mode-hook 'auto-revert-mode)
+
 (provide 'mine-emacs)

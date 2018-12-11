@@ -26,10 +26,10 @@
        (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
   (custom-theme-set-faces 'user
-                          `(org-level-8 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-7 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-6 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-5 ((t (,@headline ,@variable-tuple))))
+                          `(org-level-8 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-7 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-6 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-5 ((t (,@headline ,@variable-tuple :height 1.1))))
                           `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
@@ -91,7 +91,9 @@
       '(("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org") "* %?\n")
         ("e" "Event" entry (file+headline "~/Dropbox/org/agenda/life.org" "Social Calendar")
          "* %?                :event:")
-        ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)))
+        ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)
+        ;; ("m" "Tomorrow" entry (file "~/Dropbox/org/inbox") (paste))
+        ))
 
 ;; GTD-style org keywords
 (setq org-todo-keywords

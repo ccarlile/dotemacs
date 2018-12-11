@@ -1,0 +1,5 @@
+# Author: Chris Carlile <christopher.carlile@gmail.com>
+# name: case class T(arg: A)
+# key: def
+# --
+def ${1:name}${2:[A]}(${3:arg}: ${4:Type}): ${5:Return} = $0

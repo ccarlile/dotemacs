@@ -25,6 +25,7 @@
 (require 'mine-plaintext)
 (require 'mine-evil)
 (require 'mine-majors)
+(require 'screenshow-mode)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)

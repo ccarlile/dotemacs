@@ -1,5 +1,4 @@
 # Author: Chris Carlile
-# name: case class T(arg: A)
 # name: trait Algebra[F[_]]
 # key: tagless
 # --
@@ -8,7 +7,7 @@ trait ${1:`(file-name-sans-extension (file-name-nondirectory buffer-file-name))`
 }
 
 object $1 {
-  def impl[F[_]](implicit F: ${6:Constraint}[F]) = new $1{
+  def impl[F[_]](implicit F: ${6:Constraint}[F]) = new $1[F]{
     def $3($4): F[$5] = ${7:???}
   }
 }

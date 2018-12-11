@@ -19,7 +19,7 @@
   :init (global-company-mode)
   :config
   (add-to-list 'company-backends 'company-elm)
-  (setq company-dabbrev-downcase 0)
+  (setq company-dabbrev-downcase nil)
   (setq company-idle-delay 0))
 
 

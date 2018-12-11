@@ -157,10 +157,10 @@
       :after evil
       :config (evil-commentary-mode))
 
-    ;; (use-package evil-matchit
-    ;;   :ensure t
-    ;;   :after evil
-    ;;   :config (global-evil-matchit-mode))
+    (use-package evil-matchit
+      :ensure t
+      :after evil
+      :config (global-evil-matchit-mode))
 
     (use-package evil-collection
       :after evil
