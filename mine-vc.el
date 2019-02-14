@@ -9,11 +9,13 @@
 (use-package ghub
   :ensure t)
 
-(use-package magithub
-  :after magit
-  :ensure t
-  :config
-  (magithub-feature-autoinject t))
+;; (use-package magithub
+;;   :after magit
+;;   :ensure t
+;;   :config
+;;   (magithub-feature-autoinject t))
 
+(use-package forge
+  :ensure t)
 
 (provide 'mine-vc)

@@ -15,7 +15,9 @@
 
 (evil-leader/set-key-for-mode 'scala-mode
   "m c" 'mine-sbt-compile
-  "m s" 'sbt-start)
+  "m s" 'mine-wrap-sbt-start
+  "m t" 'sbt-send-eol
+  "m x" 'sbt-command)
 
 (evil-leader/set-key-for-mode 'elm-mode
   "m r" 'elm-repl-load)

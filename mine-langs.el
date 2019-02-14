@@ -51,6 +51,11 @@
 ;;   :config
 ;;   (add-hook 'haskell-mode-hook 'intero-mode))
 
+(defun mine-wrap-sbt-start ()
+  "Check if a file is a .scala file before attempting to launch sbt from it"
+  (interactive)
+  (if (eq major-mode 'scala-mode) (sbt-start) (print "Must start sbt from a scala project")))
+
 (use-package fsharp-mode
   :ensure t)
 

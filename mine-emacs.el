@@ -41,4 +41,6 @@
 
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 
+(global-unset-key (kbd "s-t"))
+
 (provide 'mine-emacs)

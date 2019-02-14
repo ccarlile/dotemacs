@@ -34,7 +34,8 @@
  'org-babel-load-languages
  '((scala . t)
    ;; (javascript . t)
-   (python . t))
+   (python . t)
+   (shell . t))
  )
 
 (setq tab-width 4)

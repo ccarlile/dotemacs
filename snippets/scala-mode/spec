@@ -1,0 +1,11 @@
+# Author: Chris Carlile
+# name: object $FILE extends Specification ...
+# key: spec
+# --
+package ${1:path}
+
+import org.specs2.mutable.Specification
+
+object ${2:`(file-name-sans-extension (file-name-nondirectory buffer-file-name))`} extends Specification {
+   $0
+}

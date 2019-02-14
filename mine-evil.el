@@ -65,6 +65,7 @@
 
 	;; jump prefix
 	"j j" 'avy-goto-char
+	"j t" 'avy-goto-char-timer
 
 	;; lisp prefix
 	"l f" 'load-file
@@ -87,6 +88,7 @@
 	"s p" 'helm-do-ag-project-root
 	"s b" 'helm-do-ag-buffers
 	"s s" 'helm-swoop
+        "s m" 'helm-multi-swoop-projectile
 
 	;; general toggles
 	"t t" 'helm-themes
