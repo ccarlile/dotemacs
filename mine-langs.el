@@ -65,6 +65,29 @@
   :ensure t
   )
 
+(use-package lispy
+  :ensure t
+  :config
+  (setq lispy-compat '(edebug cider))
+
+  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+  (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1))))
+
+;; (use-package lispyville
+;;   :ensure t
+;;   :config
+;;   (add-hook 'lispy-mode-hook #'lispyville-mode))
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package cider
+  :ensure t)
+
+(use-package nix-mode
+  :ensure t
+  )
+
 
 
 (provide 'mine-langs)

@@ -1,3 +1,15 @@
+;; a couple of helpers
+
+(defun switch-to-scratch-buffer ()
+    "Switch to the scratch buffer"
+    (interactive)
+    (switch-to-buffer "*scratch*"))
+
+(defun switch-to-dashboard-buffer ()
+    "Switch to the dashboard buffer"
+    (interactive)
+    (switch-to-buffer "*dashboard*"))
+
 ;; load evil
 (setq evil-want-integration nil)
 (use-package evil
@@ -28,7 +40,7 @@
 
 	;; buffer prefix
 	"b b" 'helm-mini
-	"b s" '(switch-to-buffer '"*scratch*")
+	"b s" 'switch-to-scratch-buffer
         "b k" 'kill-buffer
 
 	;; files prefix
@@ -40,6 +52,10 @@
 	"h k" 'describe-key
 	"h f" 'describe-function
         "h v" 'describe-variable
+        "h i" 'info
+        "h b" 'describe-bindings
+        "h a" 'apropos
+        "h m" 'describe-mode
 
 	;; comment/code/compile prefix
 	"c l" 'evil-commentary-line
@@ -54,6 +70,7 @@
 	"l f" 'load-file
         "l s" 'eval-last-sexp
         "l e" 'eval-expression
+        "l d" 'eval-defun
 
         ;; global org prefix (capture and friends)
         "o c" 'org-capture
@@ -92,7 +109,8 @@
 	
 	;; general prefix
 	"SPC" 'helm-M-x
-        "\\" '(switch-to-buffer '"*dashboard*")
+        "\\" 'switch-to-dashboard-buffer
+        ":" 'eval-expression
         ))
 
     :config ;; tweak evil after loading it

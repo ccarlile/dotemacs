@@ -1,0 +1,10 @@
+# Author: Chris Carlile
+# name: two column table, with sum of second column
+# key: tc
+# --
+|${1:Item}|${2:Quantity}|
+|-----------------------|
+|${3:Item 1}|${4:Quantity 1}|
+|-----------------------|
+| | |
+#+TBLFM: @>\$2=vsum(@2..@-1)

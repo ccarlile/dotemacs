@@ -35,6 +35,8 @@
 ;;   (add-to-list 'purpose-user-mode-purposes '(sbt-mode . scala))
 ;; )
 
+(setq initial-major-mode 'org-mode)
+
 (global-auto-revert-mode 1)
 
 (add-hook 'dired-mode-hook 'auto-revert-mode)

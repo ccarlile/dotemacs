@@ -17,6 +17,14 @@
   :config
   (define-key helm-find-files-map "\t" 'helm-execute-persistent-action))
 
+(defun sudo-find-file (file)
+  "Open FILE as root."
+  (interactive
+   (list (read-file-name "Open as root: ")))
+  (find-file (if (file-writable-p file)
+                 file
+               (concat "/sudo:root@localhost:" file))))
+
 (use-package helm-swoop
   :ensure t)
 

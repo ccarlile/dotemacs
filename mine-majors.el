@@ -31,5 +31,7 @@
   "m a" 'org-archive-subtree-default
   "m A" 'org-archive-done-tasks)
 
+(evil-leader/set-key-for-mode 'clojure-mode
+  "l s" 'cider-eval-last-sexp)
 
 (provide 'mine-majors)
