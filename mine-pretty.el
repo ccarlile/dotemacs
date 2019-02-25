@@ -1,18 +1,33 @@
-;; Rice
-(use-package zenburn-theme
-  :ensure t
-  :init
-  ;; (load-theme 'zenburn t)
-  )
+;; I spend a lot of time here and I want it to look good dangit
 
-(use-package helm-themes
-  :ensure t)
+(defun mine-reset-modeline-faces ()
+  "Set all face attributes to something moody can handle."
+ (let ((line (face-attribute 'mode-line :underline)))
+   (set-face-attribute 'mode-line          nil :overline   line)
+   (set-face-attribute 'mode-line-inactive nil :overline   line)
+   (set-face-attribute 'mode-line-inactive nil :underline  line)
+   (set-face-attribute 'mode-line          nil :box        nil)
+   (set-face-attribute 'mode-line-inactive nil :box        nil)
+   (set-face-attribute 'mode-line-inactive nil :background (face-attribute 'default :background))))
 
-(use-package solarized-theme
-  :ensure t)
+(defvar after-load-theme-hook nil
+  "Hook run after a color theme is loaded using `load-theme'.")
 
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t)
+(defadvice load-theme (after run-after-load-theme-hook activate)
+  "Run `after-load-theme-hook'."
+  (run-hooks 'after-load-theme-hook))
+
+(add-hook 'after-load-theme-hook 'mine-reset-modeline-faces)
+
+;; (use-package zenburn-theme)
+
+(use-package helm-themes)
+
+(use-package doom-themes)
+
+;; (use-package solarized-theme)
+
+;; (use-package color-theme-sanityinc-tomorrow)
 
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
@@ -20,53 +35,40 @@
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
-;; (setq ns-use-proxy-icon nil)
-;; (setq frame-title-format nil)
-
-;; the best way I've found is to just call golden-ratio
-;; (use-package golden-ratio
-;;   :ensure t
-;;   :diminish "🏆"
-;;   :init
-;;   (golden-ratio-mode 1))
 
 (setq ring-bell-function 'ignore)
 
-;; (use-package zoom
-;;   :ensure t
-;;   :config
-;;   (custom-set-variables
-;;    '(zoom-mode t)))
-
-(set-face-attribute 'default nil :font  "Hasklig-12")
+(set-face-attribute 'default nil :font  "Hasklig-14")
 (set-frame-font "Hasklig-10" nil t)
 
-(use-package ranger
-  :ensure t)
+(use-package ranger)
 
+;; (use-package smart-mode-line
+;;   
+;;   :config
+;;   (sml/setup)
+;;   (setq mode-line-format
+;;         (list mode-line-front-space mode-line-modified mode-line-buffer-identification sml/pos-id-separator mode-line-position vc-mode sml/pos-id-separator mode-line-modes mode-line-misc-info mode-line-end-spaces)))
 
-(use-package smart-mode-line
-  :ensure t
+(use-package moody
   :config
-  (sml/setup)
-  (setq mode-line-format
-        (list mode-line-front-space mode-line-modified mode-line-buffer-identification sml/pos-id-separator mode-line-position vc-mode sml/pos-id-separator mode-line-modes mode-line-misc-info mode-line-end-spaces)))
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
 
-;; My modeline
+(use-package minions
+  :config (minions-mode 1))
 
 (diminish 'undo-tree-mode)
 (diminish 'auto-revert-mode)
-
+  
 (use-package fontawesome
-  :ensure t
   :diminish)
-
+  
 (use-package octicons
-  :ensure t
   :diminish)
-
+  
 (use-package dashboard
-  :ensure t
   :config
   (setq dashboard-banner-logo-title "I believe in you!")
   (setq dashboard-startup-banner "~/emacs/lilbub.png")
@@ -114,9 +116,7 @@ codepoints starting from codepoint-start."
 
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
-
-(use-package centered-window
-  :ensure t)
+(use-package centered-window)
 
 
 (provide 'mine-pretty)

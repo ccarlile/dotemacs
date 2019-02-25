@@ -1,5 +1,5 @@
 (use-package elfeed
-  :ensure t
+  
   :config
   (setq elfeed-feeds
         '(("https://www.archlinux.org/feeds/news/" arch linux)
@@ -8,7 +8,6 @@
           ("http://kernel.org/kdist/rss.xml" linux)
           ("https://reddit.com/r/netflixbestof/.rss" fun netflix))))
 
-(use-package md4rd
-  :ensure t)
+(use-package md4rd)
 
 (provide 'mine-extras)

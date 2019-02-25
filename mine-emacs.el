@@ -1,5 +1,5 @@
 (use-package diminish
-  :ensure t)
+  )
 
 (setq
    backup-by-copying t      ; don't clobber symlinks
@@ -29,7 +29,7 @@
 ;; (setenv "PATH" (concat (getenv "PATH") ":" (getenv "HOME") "/bin/stack"))
 
 ;; (use-package window-purpose
-;;   :ensure t
+;;   
 ;;   :config
 ;;   (add-to-list 'purpose-user-mode-purposes '(scala-mode . scala))
 ;;   (add-to-list 'purpose-user-mode-purposes '(sbt-mode . scala))
@@ -42,5 +42,7 @@
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 
 (global-unset-key (kbd "s-t"))
+
+(column-number-mode 1)
 
 (provide 'mine-emacs)

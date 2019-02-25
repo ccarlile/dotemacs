@@ -13,9 +13,7 @@
 ;; load evil
 (setq evil-want-integration nil)
 (use-package evil
-    :ensure t ;; install the evil package if not installed
-    :diminish
-    :init ;; tweak evil's configuration before loading it
+    :init
     (setq evil-search-module 'evil-search)
     (setq evil-ex-complete-emacs-commands nil)
     (setq evil-vsplit-window-right t)
@@ -25,9 +23,7 @@
     (setq evil-want-Y-yank-to-eol t)
 
     (use-package evil-leader
-      :ensure t
       :init
-      ;;:after magit
       (global-evil-leader-mode)
       :config
       (setq evil-leader/in-all-states t)
@@ -89,6 +85,7 @@
 	"s b" 'helm-do-ag-buffers
 	"s s" 'helm-swoop
         "s m" 'helm-multi-swoop-projectile
+        "s a" 'mine-do-ag-in-project
 
 	;; general toggles
 	"t t" 'helm-themes
@@ -154,67 +151,49 @@
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
     (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 
-
     (define-key evil-motion-state-map "\t" nil)
 
-
     (use-package evil-escape
-      :ensure t
-      :diminish
       :config
       (setq-default evil-escape-key-sequence "jk")
       (setq-default evil-escape-unordered-key-sequence t)
       (evil-escape-mode))
 
     (use-package evil-surround
-      :ensure t
       :config
       (global-evil-surround-mode))
 
     (use-package evil-commentary
-      :diminish
-      :ensure t
       :after evil
       :config (evil-commentary-mode))
 
     (use-package evil-matchit
-      :ensure t
       :after evil
       :config (global-evil-matchit-mode))
 
     (use-package evil-collection
       :after evil
-      :ensure t
       :config
       (setq evil-want-keybinding nil)
       (evil-collection-init))
 
     (use-package evil-avy
       :after evil
-      :ensure t
       :config (evil-avy-mode))
 
     (use-package evil-multiedit
       :after evil
-      :ensure t
-      :config (evil-multiedit-default-keybinds)
-      )
-    ;; (use-package evil-iedit
-    ;;   :after (evil iedit)
-    ;;   :ensure t)
+      :config (evil-multiedit-default-keybinds))
 
     (use-package evil-magit
-      :ensure t
       :after (evil magit))
 
     (use-package evil-org
-      :ensure t
       :after org
       :config
       (add-hook 'org-mode-hook 'evil-org-mode
                 (lambda () evil-org-set-key-theme))
       (require 'evil-org-agenda)
       (evil-org-agenda-set-keys)))
-
 
 (provide 'mine-evil)

@@ -1,7 +1,5 @@
 ;; project/navigation
 (use-package helm
-  :ensure t
-  :diminish helm-mode
   :init
   (setq helm-display-header-line nil
         helm-mode-fuzzy-match t
@@ -12,12 +10,7 @@
   (helm-mode 1))
 
 (use-package ag
-  :ensure t
   :commands (ag ag-regexp ag-project))
-
-(use-package helm-files
-  :config
-  (define-key helm-find-files-map "\t" 'helm-execute-persistent-action))
 
 (defun sudo-find-file (file)
   "Open FILE as root."
@@ -27,8 +20,25 @@
                  file
                (concat "/sudo:root@localhost:" file))))
 
-(use-package helm-swoop
-  :ensure t)
+(defun mine-do-ag-in-project ()
+  "Prompt for a projectile project and search in there"
+  (interactive)
+  (helm-do-ag (completing-read "From which project?" 'projectile-known-projects)))
+
+;; WIP
+;; (defun mine-dumb-jump-in-project ()
+;;   "Best guess of def of symbol under point in user-supplied project root"
+;;   (interactive)
+;;   (let* ((cur-file (buffer-file-name))
+;;          (project-root (completing-read "From which project?" 'projectile-known-projects))
+;;          (cur-lang (dumb-jump-get-language cur-file))
+;;          (ctx-type (dumb ))
+;;          )
+;;     (dumb-jump-handle-results (dumb-jump-fetch-results cur-file project-root cur-lang nil) cur-file project-root)
+;;     )
+;;   )
+
+(use-package helm-swoop)
 
 (use-package helm-ag
   :ensure helm-ag
@@ -36,23 +46,17 @@
 
 (use-package projectile
   :diminish
-  :ensure t
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching t))
 
 (use-package helm-projectile
-  :ensure t
   :config
   (helm-projectile-on))
 
-(use-package dumb-jump
-  :ensure t
-  )
+(use-package dumb-jump)
 
-(use-package avy
-  :ensure t
-  )
+(use-package avy)
 
 (when (fboundp 'winner-mode)
   (winner-mode 1))

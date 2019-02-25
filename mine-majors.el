@@ -12,7 +12,6 @@
      (setq org-map-continue-from (outline-previous-heading)))
    "/DONE|CANCELLED|INACTIVE" 'tree))
 
-
 (evil-leader/set-key-for-mode 'scala-mode
   "m c" 'mine-sbt-compile
   "m s" 'mine-wrap-sbt-start
