@@ -45,4 +45,6 @@
 
 (column-number-mode 1)
 
+(visual-line-mode 1)
+
 (provide 'mine-emacs)
