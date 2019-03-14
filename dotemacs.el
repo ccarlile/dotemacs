@@ -13,23 +13,12 @@
 (setq use-package-always-ensure t)
 
 
-(setq mine-emacs-root-directory "/emacs")
+;; Dont commit this part
+(setq mine-emacs-root-directory (concat (getenv "HOME") "/emacsnew"))
 
-(add-to-list 'load-path (concat (getenv "HOME") mine-emacs-root-directory))
+;; (org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
+(org-babel-load-file (expand-file-name "emacs.org" mine-emacs-root-directory))
 
-(require 'mine-emacs)
-(require 'mine-langs)
-(require 'mine-code)
-(require 'mine-navigation)
-(require 'mine-pretty)
-(require 'mine-platform)
-(require 'mine-vc)
-(require 'mine-extras)
-(require 'mine-plaintext)
-(require 'mine-evil)
-(require 'mine-majors)
-(require 'screenshow-mode)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
-(put 'narrow-to-region 'disabled nil)

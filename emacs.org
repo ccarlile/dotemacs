@@ -1,0 +1,758 @@
+* Chris's config
+** The basics  
+   
+#+BEGIN_SRC emacs-lisp
+  (setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+   '(("." . "~/.saves/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t
+   initial-major-mode 'org-mode
+   column-number-mode 1
+   global-auto-revert-mode 1
+   global-visual-line-mode 1
+   tab-width 4)       ; use versioned backups
+
+
+  (setq-default indent-tabs-mode nil)
+
+  ;; Figure out a better way to manage PATH
+  (defun mine-make-path-home (relative)
+    "Take a path relative to home and turn it into an absolute path"
+    (concat (getenv "HOME") "/" relative)
+    )
+
+  (setq mine-paths
+        (list (mine-make-path-home "bin/stack")
+              (mine-make-path-home ".local/bin")
+              (mine-make-path-home "bin")))
+
+  (setq exec-path (append exec-path mine-paths))
+  (setenv "PATH" (concat (getenv "PATH") ":" (mapconcat 'identity mine-paths ":")))
+
+
+  (add-hook 'dired-mode-hook 'auto-revert-mode)
+
+  (global-unset-key (kbd "s-t"))
+#+END_SRC
+*** Some helper functions
+#+BEGIN_SRC emacs-lisp
+  (defun switch-to-scratch-buffer ()
+    "Switch to the scratch buffer"
+    (interactive)
+    (switch-to-buffer "*scratch*"))
+
+  (defun switch-to-dashboard-buffer ()
+    "Switch to the dashboard buffer"
+    (interactive)
+    (switch-to-buffer "*dashboard*"))
+#+END_SRC
+** Navigation & Editing
+   #+BEGIN_SRC emacs-lisp
+     (use-package iedit)
+
+     (use-package string-inflection)
+
+     (use-package helm
+       :init
+       (setq helm-display-header-line nil
+             helm-mode-fuzzy-match t
+             helm-completion-in-region-fuzzy-match t
+             helm-buffers-fuzzy-matching t
+             helm-recentf-fuzzy-match t)
+       (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+       (helm-mode 1))
+
+     (use-package ag
+       :commands (ag ag-regexp ag-project))
+
+     (defun sudo-find-file (file)
+       "Open FILE as root."
+       (interactive
+        (list (read-file-name "Open as root: ")))
+       (find-file (if (file-writable-p file)
+                      file
+                    (concat "/sudo:root@localhost:" file))))
+
+     (defun mine-do-ag-in-project ()
+       "Prompt for a projectile project and search in there"
+       (interactive)
+       (helm-do-ag (completing-read "From which project?" 'projectile-known-projects)))
+
+     ;; WIP
+     ;; (defun mine-dumb-jump-in-project ()
+     ;;   "Best guess of def of symbol under point in user-supplied project root"
+     ;;   (interactive)
+     ;;   (let* ((cur-file (buffer-file-name))
+     ;;          (project-root (completing-read "From which project?" 'projectile-known-projects))
+     ;;          (cur-lang (dumb-jump-get-language cur-file))
+     ;;          (ctx-type (dumb ))
+     ;;          )
+     ;;     (dumb-jump-handle-results (dumb-jump-fetch-results cur-file project-root cur-lang nil) cur-file project-root)
+     ;;     )
+     ;;   )
+
+     (use-package helm-swoop)
+
+     (use-package helm-ag
+       :ensure helm-ag
+       :commands helm-ag helm-projectile-ag)
+
+     (use-package projectile
+       :diminish
+       :config
+       (projectile-global-mode)
+       (setq projectile-enable-caching t))
+
+     (use-package helm-projectile
+       :config
+       (helm-projectile-on))
+
+     (use-package dumb-jump)
+
+     (use-package avy)
+
+     (when (fboundp 'winner-mode)
+       (winner-mode 1))
+
+     (use-package ranger)
+#+END_SRC
+** Org-mode  
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((scala . t)
+     ;; (javascript . t)
+     (python . t)
+     (shell . t)
+     (http . t)
+     (ammonite . t)))
+
+  (use-package ob-ammonite)
+
+  (defun org-archive-done-tasks ()
+    "Archive all headings in a subtree"
+    (interactive)
+    (org-map-entries
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (outline-previous-heading)))
+     "/DONE|CANCELLED|INACTIVE" 'tree))
+
+  (use-package ox-gfm)
+
+  ;; Todo: visual-line-mode in org, md, txt, etc. and the associated evil j/k movement 
+
+  (use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+
+  ;; I took this out because the fixed colors for the faces pissed me off.
+  ;; Will return to it when I figure out how faces work
+
+  ;; (let* ((variable-tuple (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+  ;;                              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+  ;;                              ((x-list-fonts "Verdana")         '(:font "Verdana"))
+  ;;                              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+  ;;                              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+  ;;        (base-font-color     (face-foreground 'default nil 'default))
+  ;;        (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+  ;;   (custom-theme-set-faces 'user
+  ;;                           `(org-level-8 ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;                           `(org-level-7 ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;                           `(org-level-6 ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;                           `(org-level-5 ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;                           `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+  ;;                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+  ;;                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+  ;;                           `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
+  ;;                           `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil)))))
+  ;;   )
+
+  (setq org-hide-emphasis-markers t)
+
+  (use-package org-mind-map
+    :init
+    (require 'ox-org)
+
+    ;; Uncomment the below if 'ensure-system-packages` is installed
+    ;;:ensure-system-package (gvgen . graphviz)
+    :config
+    (setq org-mind-map-engine "dot")       ; Default. Directed Graph
+    ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
+    ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
+    ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
+    ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
+    ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
+    ;; (setq org-mind-map-engine "circo")  ; Circular Layout
+    )
+
+
+  (setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
+                               "~/Dropbox/org/agenda/inbox.org"
+                               "~/Dropbox/org/agenda/benntoo.org"
+                               "~/b/org/banno.org"))
+
+  (setq org-default-notes-file "~/Dropbox/org/agenda/inbox.org")
+
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 9)))
+
+                                          ; Refile in a single go
+  (setq org-outline-path-complete-in-steps nil)
+
+
+                                          ; Show full paths for refiling
+  (setq org-refile-use-outline-path t)
+
+  (setq org-capture-templates
+        '(("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org") "* %?\n")
+          ("e" "Event" entry (file+headline "~/Dropbox/org/agenda/life.org" "Social Calendar")
+           "* %?                :event:")
+          ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)
+          ;; ("m" "Tomorrow" entry (file "~/Dropbox/org/inbox") (paste))
+          ))
+
+  ;; GTD-style org keywords
+  (setq org-todo-keywords
+        '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED")))
+
+  (setq org-src-tab-acts-natively t)
+
+  (setq org-html-validation-link nil)
+
+  (setq org-image-actual-width '(300))
+
+  (use-package ob-http)
+
+#+END_SRC
+
+** Programming
+*** VC & magit
+#+BEGIN_SRC emacs-lisp
+
+(use-package magit
+  :commands (magit-status projectile-vc))
+
+(defvar work-home-dir
+  (concat (getenv "HOME") "/b/"))
+
+;; Wrapper to clone a work repo
+(defun mine-magit-clone-banno (reponame)
+  "Clone REPO from github and put it in with the rest of the projects"
+  (interactive "MName of project: ")
+  (let ((repo-dir (concat work-home-dir reponame "/"))
+        (remote-repo (concat "git@github.com:banno/" reponame)))
+    (magit-clone remote-repo repo-dir)))
+
+(use-package browse-at-remote)
+
+(use-package ghub)
+
+(use-package forge)
+#+END_SRC
+*** Language independent
+    #+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :init
+  (setq yas-snippet-dirs '("~/emacs/snippets"))
+  :config
+  (yas-global-mode 1))
+
+(use-package smartparens
+  :config
+  (smartparens-global-mode t))
+
+(use-package company
+  :defer t
+  :init (global-company-mode)
+  :config
+  (add-to-list 'company-backends 'company-elm)
+  (setq company-dabbrev-downcase nil)
+  (setq company-idle-delay 0))
+
+(use-package flycheck
+  :init 
+  (global-flycheck-mode))
+#+END_SRC
+
+*** Language specific
+#+BEGIN_SRC emacs-lisp
+  (use-package scala-mode
+    :mode (("\\.scala\\'" . scala-mode)
+           ("\\.sbt\\'" . scala-mode)
+           ("\\.sc\\'" . scala-mode))
+    :config
+    (progn
+      (setq scala-indent:align-parameters t)
+      (setq scala-indent:align-forms t)))
+
+
+  (use-package sbt-mode
+    :config
+    (add-hook 'sbt-mode-hook '(lambda ()
+                                (setq compilation-skip-threshold 2)))
+    (add-hook 'scala-mode-hook '(lambda ()
+                                  (progn
+                                    (setq tab-width 2)
+                                    (if (and buffer-file-name
+                                             (string= (file-name-extension buffer-file-name) "sbt"))
+                                        (flycheck-mode -1))))))
+  (use-package json-mode
+    :config
+    (add-hook 'json-mode-hook (lambda ()
+                                (make-local-variable 'js-indent-level)
+                                (setq js-indent-level 2)
+                                (setq tab-width 2))))
+
+  (use-package haskell-mode
+    :config
+    (setq
+     ghc-ghc-options '("-fno-warn-missing-signatures")
+     haskell-compile-cabal-build-command "cd %s && stack build"
+     haskell-process-type 'stack-ghci
+     haskell-interactive-popup-errors nil
+     haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci-ng")
+     haskell-process-path-ghci "stack"))
+
+  ;; (use-package intero
+  ;;   
+  ;;   :config
+  ;;   (add-hook 'haskell-mode-hook 'intero-mode))
+
+  (defun mine-wrap-sbt-start ()
+    "Check if a file is a .scala file before attempting to launch sbt from it"
+    (interactive)
+    (if (eq major-mode 'scala-mode) (sbt-start) (print "Must start sbt from a scala project")))
+
+  (use-package fsharp-mode)
+
+  (use-package elm-mode)
+
+  (use-package yaml-mode)
+
+  (use-package ess)
+
+  (use-package lispy
+    :config
+    (setq lispy-compat '(edebug cider))
+
+    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+    (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1))))
+
+  ;; (use-package lispyville
+  ;;   
+  ;;   :config
+  ;;   (add-hook 'lispy-mode-hook #'lispyville-mode))
+
+  (use-package clojure-mode)
+
+  (use-package cider)
+
+  (use-package nix-mode)
+
+  (use-package terraform-mode)
+
+
+  (defun mine-sbt-compile ()
+    "I sure wish I knew how this works"
+    (interactive)
+    (sbt-command "compile"))
+
+#+END_SRC
+** Natural language
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+
+  ;; TODO: document this
+  (use-package htmlize)
+
+  (use-package writeroom-mode)
+
+  (use-package wc-mode)
+
+  (defun text-mode-hooks ()
+    "Stuff to ensure a nice writing environment for plain text and similar formats."
+    (visual-line-mode))
+
+   (use-package pdf-tools
+     :config
+     (pdf-tools-install)
+     (evil-set-initial-state 'pdf-view-mode 'normal))
+#+END_SRC
+** Purely Aesthetic
+#+BEGIN_SRC emacs-lisp
+  (defun mine-reset-modeline-faces ()
+    "Set all face attributes to something moody can handle."
+    (let ((line (face-attribute 'mode-line :underline)))
+      (set-face-attribute 'mode-line          nil :overline   line)
+      (set-face-attribute 'mode-line-inactive nil :overline   line)
+      (set-face-attribute 'mode-line-inactive nil :underline  line)
+      (set-face-attribute 'mode-line          nil :box        nil)
+      (set-face-attribute 'mode-line-inactive nil :box        line)
+      (set-face-attribute 'mode-line-inactive nil :background (face-attribute 'default :background))))
+
+  (defvar after-load-theme-hook nil
+    "Hook run after a color theme is loaded using `load-theme'.")
+
+  (defadvice load-theme (after run-after-load-theme-hook activate)
+    "Run `after-load-theme-hook'."
+    (run-hooks 'after-load-theme-hook))
+
+  (add-hook 'after-load-theme-hook 'mine-reset-modeline-faces)
+
+  (use-package helm-themes)
+
+  (use-package doom-themes)
+
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1)
+
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+
+  (setq ring-bell-function 'ignore)
+
+  (set-face-attribute 'default nil :font  "Hasklig-14")
+  (set-frame-font "Hasklig-10" nil t)
+
+  (use-package moody
+    :config
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode))
+
+  (use-package minions
+    :config (minions-mode 1))
+
+  (use-package fontawesome
+    :diminish)
+
+  (use-package octicons
+    :diminish)
+
+  (use-package dashboard
+    :config
+    (setq dashboard-banner-logo-title "I believe in you!")
+    (setq dashboard-startup-banner "~/emacs/lilbub.png")
+    (setq dashboard-items '((recents . 10)
+                            (projects . 10)
+                            (agenda . 10)))
+    (dashboard-setup-startup-hook))
+
+  ;; LIGATURES BABY
+  (defun my-correct-symbol-bounds (pretty-alist)
+    "Prepend a TAB character to each symbol in this alist,
+  this way compose-region called by prettify-symbols-mode
+  will use the correct width of the symbols
+  instead of the width measured by char-width."
+    (mapcar (lambda (el)
+              (setcdr el (string ?\t (cdr el)))
+              el)
+            pretty-alist))
+
+  (defun my-ligature-list (ligatures codepoint-start)
+    "Create an alist of strings to replace with
+  codepoints starting from codepoint-start."
+    (let ((codepoints (-iterate '1+ codepoint-start (length ligatures))))
+      (-zip-pair ligatures codepoints)))
+
+                                          ; list can be found at https://github.com/i-tu/Hasklig/blob/master/GlyphOrderAndAliasDB#L1588
+  (setq my-hasklig-ligatures
+        (let* ((ligs '("&&" "***" "*>" "\\\\" "||" "|>" "::"
+                       "==" "===" "==>" "=>" "=<<" "!!" ">>"
+                       ">>=" ">>>" ">>-" ">-" "->" "-<" "-<<"
+                       "<*" "<*>" "<|" "<|>" "<$>" "<>" "<-"
+                       "<<" "<<<" "<+>" ".." "..." "++" "+++"
+                       "/=" ":::" ">=>" "->>" "<=>" "<=<" "<->")))
+          (my-correct-symbol-bounds (my-ligature-list ligs #Xe100))))
+
+  ;; nice glyphs for haskell with hasklig
+  (defun my-set-hasklig-ligatures ()
+    "Add hasklig ligatures for use with prettify-symbols-mode."
+    (setq prettify-symbols-alist
+          (append my-hasklig-ligatures prettify-symbols-alist))
+    (prettify-symbols-mode))
+
+  (add-hook 'scala-mode-hook 'my-set-hasklig-ligatures)
+  (add-hook 'haskell-mode-hook 'my-set-hasklig-ligatures)
+
+  (set-face-attribute 'mode-line nil :box nil)
+  (set-face-attribute 'mode-line-inactive nil :box nil)
+
+  (use-package centered-window)
+
+  (use-package xresources-theme
+    :if (eq system-type 'gnu/linux))
+
+  (use-package emojify
+    :config
+    (setq emojify-emoji-styles "unicode")
+    (add-hook 'after-init-hook #'global-emojify-mode))
+#+END_SRC
+** Fun things
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed
+  :config
+  (setq elfeed-feeds
+        '(("https://www.archlinux.org/feeds/news/" arch linux)
+          ("https://xkcd.com/rss.xml" fun comic)
+          ("https://www.smbc-comics.com/rss.php" fun comic)
+          ("http://kernel.org/kdist/rss.xml" linux)
+          ("https://reddit.com/r/netflixbestof/.rss" fun netflix))))
+
+(use-package md4rd)
+#+END_SRC
+** Evil
+#+BEGIN_SRC emacs-lisp
+  ;; load evil
+  (setq evil-want-integration nil)
+  (use-package evil
+    :init
+    (setq evil-search-module 'evil-search)
+    (setq evil-ex-complete-emacs-commands nil)
+    (setq evil-vsplit-window-right t)
+    (setq evil-split-window-below t)
+    (setq evil-shift-round nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-Y-yank-to-eol t)
+
+    (use-package evil-leader
+      :init
+      (global-evil-leader-mode)
+      :config
+      (setq evil-leader/in-all-states t)
+      (evil-leader/set-leader "<SPC>")
+      (evil-leader/set-key
+        ;; git prefix
+        "g s" 'magit-status
+        "g r" 'browse-at-remote
+        "g b" 'magit-blame
+
+        ;; buffer prefix
+        "b b" 'helm-mini
+        "b s" 'switch-to-scratch-buffer
+        "b k" 'kill-buffer
+
+        ;; files prefix
+        "f f" 'helm-find-files
+        "f j" 'dired-jump
+        "f r" 'ranger
+
+        ;; help prefix
+        "h k" 'describe-key
+        "h f" 'describe-function
+        "h v" 'describe-variable
+        "h i" 'info
+        "h b" 'describe-bindings
+        "h a" 'apropos
+        "h m" 'describe-mode
+
+        ;; comment/code/compile prefix
+        "c l" 'evil-commentary-line
+        "c d" 'comment-dwim
+        "c n" 'next-error
+        "c p" 'previous-error
+
+        ;; jump prefix
+        "j j" 'avy-goto-char
+        "j t" 'avy-goto-char-timer
+
+        ;; lisp prefix
+        "l f" 'load-file
+        "l s" 'eval-last-sexp
+        "l e" 'eval-expression
+        "l d" 'eval-defun
+
+        ;; global org prefix (capture and friends)
+        "o c" 'org-capture
+        "o a" 'org-agenda
+        "o s" 'org-schedule
+
+        ;; projectile prefix
+        "p f" 'helm-projectile-find-file
+        "p p" 'helm-projectile-switch-project
+        "p i" 'projectile-invalidate-cache
+
+        ;; search prefix
+        "s f" 'helm-do-ag
+        "s p" 'helm-do-ag-project-root
+        "s b" 'helm-do-ag-buffers
+        "s s" 'helm-swoop
+        "s m" 'helm-multi-swoop-projectile
+        "s a" 'mine-do-ag-in-project
+
+        ;; general toggles
+        "t t" 'helm-themes
+        "t n" 'global-linum-mode
+        "t g" 'golden-ratio
+
+        ;; variable prefix
+        "v k" 'string-inflection-kebab-case
+        "v j" 'string-inflection-camelcase
+        "v c" 'string-inflection-lower-camelcase
+        "v p" 'string-inflection-underscore
+
+        ;; window prefix
+        "w l" 'evil-window-right
+        "w L" 'evil-window-move-far-right
+        "w h" 'evil-window-left
+        "w H" 'evil-window-move-far-left
+        "w s" 'evil-split-buffer
+        "w v" 'evil-window-vsplit
+
+        ;; general prefix
+        "SPC" 'helm-M-x
+        "\\" 'switch-to-dashboard-buffer
+        ":" 'eval-expression
+        ))
+
+    :config ;; tweak evil after loading it
+    (evil-mode)
+
+    (defun evil-window-up-and-resize ()
+      "Calls evil-window-up and subsuquently golden-ratio"
+      (interactive)
+      (evil-window-up 1)
+      (golden-ratio))
+
+    (defun evil-window-down-and-resize ()
+      "Calls evil-window-down and subsuquently golden-ratio"
+      (interactive)
+      (evil-window-down 1)
+      (golden-ratio))
+
+    ;; muh speshul keybinds
+    (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+    (define-key evil-normal-state-map (kbd ":") 'evil-repeat-find-char)
+    (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+    (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+    ;; uncomment on widescreen
+    ;; (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+    ;; (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+    (define-key evil-normal-state-map (kbd "C-c l") 'winner-redo)
+    (define-key evil-normal-state-map (kbd "C-c h") 'winner-undo)
+    (define-key evil-normal-state-map (kbd "C-c n") 'next-error)
+    (define-key evil-normal-state-map (kbd "C-c n") 'next-error)
+    (define-key evil-normal-state-map (kbd "C-]") 'dumb-jump-go)
+    (define-key evil-normal-state-map (kbd "C-'") 'dumb-jump-go)
+    (define-key evil-normal-state-map (kbd "C-t") 'dumb-jump-back)
+    (define-key evil-visual-state-map (kbd "s") 'evil-surround-reion)
+    (define-key evil-normal-state-map (kbd "SPC g r") 'browse-at-remote)
+    (define-key evil-normal-state-map [backspace] 'evil-switch-to-windows-last-buffer)
+    (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
+    (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
+    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+
+    (define-key evil-motion-state-map "\t" nil)
+
+    (use-package evil-escape
+      :config
+      (setq-default evil-escape-key-sequence "jk")
+      (setq-default evil-escape-unordered-key-sequence t)
+      (evil-escape-mode))
+
+    (use-package evil-surround
+      :config
+      (global-evil-surround-mode))
+
+    (use-package evil-commentary
+      :after evil
+      :config (evil-commentary-mode))
+
+    (use-package evil-matchit
+      :after evil
+      :config (global-evil-matchit-mode))
+
+    (use-package evil-collection
+      :after evil
+      :config
+      (setq evil-want-keybinding nil)
+      (evil-collection-init))
+
+    (use-package evil-avy
+      :after evil
+      :config (evil-avy-mode))
+
+    (use-package evil-multiedit
+      :after evil
+      :config (evil-multiedit-default-keybinds))
+
+    (use-package evil-magit
+      :after (evil magit))
+
+    (use-package evil-org
+      :after org
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode
+                (lambda () evil-org-set-key-theme))
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys)))
+
+  (evil-leader/set-key-for-mode 'scala-mode
+    "m c" 'mine-sbt-compile
+    "m s" 'mine-wrap-sbt-start
+    "m t" 'sbt-send-eol
+    "m x" 'sbt-command)
+
+  (evil-leader/set-key-for-mode 'elm-mode
+    "m r" 'elm-repl-load)
+
+  (evil-leader/set-key-for-mode 'org-mode
+    ;; "X"port
+    "x h" 'org-html-export-to-html
+    "x t" 'org-babel-tangle
+
+    ;; general
+    "m d" 'org-todo
+    "m h" 'org-toggle-heading
+    "m a" 'org-archive-subtree-default
+    "m A" 'org-archive-done-tasks)
+
+  (evil-leader/set-key-for-mode 'clojure-mode
+    "l s" 'cider-eval-last-sexp)
+
+(defun mine-lisp-keys ()
+  "Major mode bindings for .el."
+  (evil-leader/set-key
+    ;; git prefix
+    "m f" 'load-file
+    "m s" 'eval-last-sexp))
+
+(add-hook 'emacs-list-mode-hook 'mine-lisp-keys)
+
+#+END_SRC
+
+** Platform-specific stuff
+#+BEGIN_SRC emacs-lisp
+(cond
+ ((string-equal system-type "darwin")
+  (progn
+    (setq exec-path (append exec-path '("/usr/local/bin")))
+    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+    (setq moody-slant-function 'moody-slant-apple-rgb)
+    (message "OSX")))
+ ((string-equal system-type "gnu/linux")
+  (progn
+    (setq exec-path (append exec-path '("/usr/local/bin")))
+    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+    (message "Linucks"))))
+#+END_SRC
+
+
