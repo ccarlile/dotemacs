@@ -9,7 +9,7 @@
     (setq scala-indent:align-parameters t)
     (setq scala-indent:align-forms t)))
 
-(use-package ensime)
+(use-package ob-ammonite)
 
 (use-package sbt-mode
   :config
@@ -75,5 +75,7 @@
 (use-package cider)
 
 (use-package nix-mode)
+
+(use-package terraform-mode)
 
 (provide 'mine-langs)

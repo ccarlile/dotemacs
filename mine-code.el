@@ -16,8 +16,6 @@
   (setq company-dabbrev-downcase nil)
   (setq company-idle-delay 0))
 
-(global-linum-mode t)
-
 (use-package flycheck
   :init (global-flycheck-mode))
 
@@ -26,8 +24,9 @@
  '((scala . t)
    ;; (javascript . t)
    (python . t)
-   (shell . t))
- )
+   (shell . t)
+   (http . t)
+   (ammonite . t)))
 
 (setq tab-width 4)
 

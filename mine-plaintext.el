@@ -6,6 +6,9 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+(use-package ox-gfm)
+
+;; TODO: document this
 (use-package htmlize)
 
 ;; Todo: visual-line-mode in org, md, txt, etc. and the associated evil j/k movement 
@@ -13,6 +16,10 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+
+;; I took this out because the fixed colors for the faces pissed me off.
+;; Will return to it when I figure out how faces work
 
 ;; (let* ((variable-tuple (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
 ;;                              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -68,7 +75,8 @@
 
 (setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
                              "~/Dropbox/org/agenda/inbox.org"
-                             "~/Dropbox/org/agenda/benntoo.org"))
+                             "~/Dropbox/org/agenda/benntoo.org"
+                             "~/b/org/banno.org"))
 
 (setq org-default-notes-file "~/Dropbox/org/agenda/inbox.org")
 
@@ -94,6 +102,13 @@
 (setq org-todo-keywords
   '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED")))
 
+(setq org-src-tab-acts-natively t)
+
+(setq org-html-validation-link nil)
+
+(setq org-image-actual-width '(300))
+
+(use-package ob-http)
 
 (use-package pdf-tools
   :config
@@ -102,7 +117,9 @@
 
 (use-package emojify
   :config
+  (setq emojify-emoji-styles "unicode")
+  
+  
   (add-hook 'after-init-hook #'global-emojify-mode))
 
 (provide 'mine-plaintext)
-
