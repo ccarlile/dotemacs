@@ -1,0 +1,12 @@
+# Author: Chris Carlile
+# name: Enumeration
+# key: enum
+# --
+sealed trait ${1:Type} extends EnumEntry
+
+object $1 extends Enum[$1] {
+
+  val values = findValues
+
+  case object ${2:Entry} extends $1
+}

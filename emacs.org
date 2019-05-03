@@ -14,7 +14,7 @@
    column-number-mode 1
    global-auto-revert-mode 1
    global-visual-line-mode 1
-   tab-width 4)       ; use versioned backups
+   tab-width 4)
 
 
   (setq-default indent-tabs-mode nil)
@@ -119,6 +119,13 @@
        (winner-mode 1))
 
      (use-package ranger)
+
+     (defun insert-random-uuid ()
+       (interactive)
+       (shell-command "uuidgen" t))
+
+     (use-package imenu-list)
+
 #+END_SRC
 ** Org-mode  
 #+BEGIN_SRC emacs-lisp
@@ -260,27 +267,50 @@
 #+END_SRC
 *** Language independent
     #+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :init
-  (setq yas-snippet-dirs '("~/emacs/snippets"))
-  :config
-  (yas-global-mode 1))
+      (use-package yasnippet
+        :init
+        (setq yas-snippet-dirs '("~/emacs/snippets"))
+        :config
+        (yas-global-mode 1))
 
-(use-package smartparens
-  :config
-  (smartparens-global-mode t))
+      (use-package smartparens
+        :config
+        (smartparens-global-mode t))
 
-(use-package company
-  :defer t
-  :init (global-company-mode)
-  :config
-  (add-to-list 'company-backends 'company-elm)
-  (setq company-dabbrev-downcase nil)
-  (setq company-idle-delay 0))
+      (use-package evil-smartparens)
 
-(use-package flycheck
-  :init 
-  (global-flycheck-mode))
+      (use-package company
+        :defer t
+        :init (global-company-mode)
+        :config
+        (add-to-list 'company-backends 'company-elm)
+        (setq company-dabbrev-downcase nil)
+        (setq company-idle-delay 0))
+
+      (use-package flycheck
+        :init 
+        (global-flycheck-mode))
+
+      (use-package lsp-mode
+        :init (setq lsp-prefer-flymake nil))
+
+      (use-package lsp-ui
+        :hook (lsp-mode . lsp-ui-mode))
+
+      (use-package lsp-scala
+        :after scala-mode
+        :demand t
+        ;; Optional - enable lsp-scala automatically in scala files
+        :hook (scala-mode . lsp))
+
+      (use-package treemacs)
+
+      (use-package treemacs-evil
+        :after treemacs evil)
+
+      (use-package treemacs-projectile
+        :after treemacs projectile)
+
 #+END_SRC
 
 *** Language specific
@@ -297,6 +327,10 @@
 
   (use-package sbt-mode
     :config
+    (substitute-key-definition
+     'minibuffer-complete-word
+     'self-insert-command
+     minibuffer-local-completion-map)
     (add-hook 'sbt-mode-hook '(lambda ()
                                 (setq compilation-skip-threshold 2)))
     (add-hook 'scala-mode-hook '(lambda ()
@@ -311,6 +345,7 @@
                                 (make-local-variable 'js-indent-level)
                                 (setq js-indent-level 2)
                                 (setq tab-width 2))))
+  (use-package jsonnet-mode)
 
   (use-package haskell-mode
     :config
@@ -437,7 +472,10 @@
     (moody-replace-vc-mode))
 
   (use-package minions
-    :config (minions-mode 1))
+    :config 
+    (minions-mode 1)
+    ;; Workers of the Modeline, unite!
+    (setq minions-mode-line-lighter "☭"))
 
   (use-package fontawesome
     :diminish)
@@ -506,16 +544,18 @@
 #+END_SRC
 ** Fun things
 #+BEGIN_SRC emacs-lisp
-(use-package elfeed
-  :config
-  (setq elfeed-feeds
-        '(("https://www.archlinux.org/feeds/news/" arch linux)
-          ("https://xkcd.com/rss.xml" fun comic)
-          ("https://www.smbc-comics.com/rss.php" fun comic)
-          ("http://kernel.org/kdist/rss.xml" linux)
-          ("https://reddit.com/r/netflixbestof/.rss" fun netflix))))
+  (use-package elfeed
+    :config
+    (setq elfeed-feeds
+          '(("https://www.archlinux.org/feeds/news/" arch linux)
+            ("https://xkcd.com/rss.xml" fun comic)
+            ("https://www.smbc-comics.com/rss.php" fun comic)
+            ("http://kernel.org/kdist/rss.xml" linux)
+            ("https://reddit.com/r/netflixbestof/.rss" fun netflix))))
 
-(use-package md4rd)
+  (use-package md4rd
+    :config
+    (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
 #+END_SRC
 ** Evil
 #+BEGIN_SRC emacs-lisp
@@ -542,6 +582,7 @@
         "g s" 'magit-status
         "g r" 'browse-at-remote
         "g b" 'magit-blame
+        "g f" 'magit-log-buffer-file
 
         ;; buffer prefix
         "b b" 'helm-mini
@@ -651,14 +692,16 @@
     (define-key evil-normal-state-map (kbd "C-]") 'dumb-jump-go)
     (define-key evil-normal-state-map (kbd "C-'") 'dumb-jump-go)
     (define-key evil-normal-state-map (kbd "C-t") 'dumb-jump-back)
-    (define-key evil-visual-state-map (kbd "s") 'evil-surround-reion)
     (define-key evil-normal-state-map (kbd "SPC g r") 'browse-at-remote)
     (define-key evil-normal-state-map [backspace] 'evil-switch-to-windows-last-buffer)
-    (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
-    (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
     (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+
+    (define-key evil-visual-state-map (kbd "s") 'evil-surround-reion)
+
+    (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
+    (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
 
     (define-key evil-motion-state-map "\t" nil)
 
@@ -688,7 +731,9 @@
 
     (use-package evil-avy
       :after evil
-      :config (evil-avy-mode))
+      :config 
+      (evil-avy-mode)
+      (setq avy-case-fold-search nil))
 
     (use-package evil-multiedit
       :after evil
@@ -728,14 +773,14 @@
   (evil-leader/set-key-for-mode 'clojure-mode
     "l s" 'cider-eval-last-sexp)
 
-(defun mine-lisp-keys ()
-  "Major mode bindings for .el."
-  (evil-leader/set-key
-    ;; git prefix
-    "m f" 'load-file
-    "m s" 'eval-last-sexp))
+  (defun mine-lisp-keys ()
+    "Major mode bindings for .el."
+    (evil-leader/set-key
+      ;; git prefix
+      "m f" 'load-file
+      "m s" 'eval-last-sexp))
 
-(add-hook 'emacs-list-mode-hook 'mine-lisp-keys)
+  (add-hook 'emacs-list-mode-hook 'mine-lisp-keys)
 
 #+END_SRC
 

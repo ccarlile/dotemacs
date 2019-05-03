@@ -14,7 +14,7 @@
 
 
 ;; Dont commit this part
-(setq mine-emacs-root-directory (concat (getenv "HOME") "/emacsnew"))
+(setq mine-emacs-root-directory (concat (getenv "HOME") "/emacs"))
 
 ;; (org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
 (org-babel-load-file (expand-file-name "emacs.org" mine-emacs-root-directory))
