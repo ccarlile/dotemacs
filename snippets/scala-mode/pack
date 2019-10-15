@@ -1,0 +1,5 @@
+# Author: Chris Carlile
+# name: package com.reasonable.path.name
+# key: pack
+# --
+package `(mine-scala-package-from-path)`

@@ -1,0 +1,27 @@
+# Author: Chris Carlile
+# name: case class T(arg: A); object T { implicit ... }
+# key: ccodec
+# --
+package `(mine-scala-package-from-path)`
+
+import cats._
+import cats.effect._
+import io.circe._
+import io.circe.generic.semiauto._
+import org.http4s.circe._
+
+case class ${1:`(file-name-sans-extension (file-name-nondirectory buffer-file-name))`}(${3:arg}: ${4:type})
+
+object $1 {
+$0
+  implicit val ${1:$(concat (s-lower-camel-case yas-text) "Decoder")}: Decoder[$1] =
+    deriveDecoder[$1]
+  implicit def ${1:$(concat (s-lower-camel-case yas-text) "EntDec")}[F[_]: Sync] =
+    jsonOf[F, $1]
+
+  implicit val ${1:$(concat (s-lower-camel-case yas-text) "Encoder")}: Encoder[$1] =
+    deriveEncoder[$1]
+  implicit def ${1:$(concat (s-lower-camel-case yas-text) "EntEnc")}[F[_]: Applicative] =
+    jsonEncoderOf[F, $1]
+
+}

@@ -1,6 +1,7 @@
 ;; load package manager, add the Melpa package registry
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; bootstrap use-package
@@ -22,3 +23,4 @@
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
+(put 'narrow-to-region 'disabled nil)

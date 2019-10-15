@@ -2,6 +2,8 @@
 # name: trait Algebra[F[_]]
 # key: tagless
 # --
+package `(mine-scala-package-from-path)`
+
 trait ${1:`(file-name-sans-extension (file-name-nondirectory buffer-file-name))`}[F[_]]{
   def ${3:functionName}(${4:arg: Type}): F[${5:Return}]
 }

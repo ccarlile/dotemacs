@@ -1,0 +1,7 @@
+# Author: Chris Carlile
+# name: object {  }
+# key: ob
+# --
+object ${1:Name} {
+  ${2:content}
+}

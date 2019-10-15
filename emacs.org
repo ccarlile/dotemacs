@@ -22,8 +22,7 @@
   ;; Figure out a better way to manage PATH
   (defun mine-make-path-home (relative)
     "Take a path relative to home and turn it into an absolute path"
-    (concat (getenv "HOME") "/" relative)
-    )
+    (concat (getenv "HOME") "/" relative))
 
   (setq mine-paths
         (list (mine-make-path-home "bin/stack")
@@ -57,13 +56,14 @@
      (use-package string-inflection)
 
      (use-package helm
-       :init
+       :config
        (setq helm-display-header-line nil
              helm-mode-fuzzy-match t
              helm-completion-in-region-fuzzy-match t
              helm-buffers-fuzzy-matching t
              helm-recentf-fuzzy-match t)
        (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+       (define-key helm-map (kbd "C-z") 'helm-select-action)
        (helm-mode 1))
 
      (use-package ag
@@ -80,7 +80,7 @@
      (defun mine-do-ag-in-project ()
        "Prompt for a projectile project and search in there"
        (interactive)
-       (helm-do-ag (completing-read "From which project?" 'projectile-known-projects)))
+       (helm-do-ag (completing-read "From which project? " 'projectile-known-projects)))
 
      ;; WIP
      ;; (defun mine-dumb-jump-in-project ()
@@ -101,6 +101,29 @@
        :ensure helm-ag
        :commands helm-ag helm-projectile-ag)
 
+     (defun helm-ag--do-ag-candidate-process ()
+       (let* ((non-essential nil)
+              (default-directory (or helm-ag--default-directory
+                                     helm-ag--last-default-directory
+                                     default-directory))
+              (cmd-args (helm-ag--construct-do-ag-command helm-pattern)))
+         (if cmd-args
+             (let ((proc (apply #'start-file-process "helm-do-ag" nil cmd-args)))
+               (setq helm-ag--last-query helm-pattern
+                     helm-ag--last-command cmd-args
+                     helm-ag--ignore-case (helm-ag--ignore-case-p cmd-args helm-pattern)
+                     helm-ag--last-default-directory default-directory)
+               (prog1 proc
+                 (set-process-sentinel
+                  proc
+                  (lambda (process event)
+                    (helm-process-deferred-sentinel-hook
+                     process event (helm-default-directory))
+                    (when (string= event "finished\n")
+                      (helm-ag--do-ag-propertize helm-input))))))
+           ;; Workaround: simply provide an empty echo process
+           (start-file-process "echo" nil "echo"))))
+
      (use-package projectile
        :diminish
        :config
@@ -111,7 +134,9 @@
        :config
        (helm-projectile-on))
 
-     (use-package dumb-jump)
+     (use-package dumb-jump
+       :config
+       (setq dumb-jump-selector 'helm))
 
      (use-package avy)
 
@@ -126,9 +151,20 @@
 
      (use-package imenu-list)
 
+     (use-package expand-region
+       :config
+       (global-set-key (kbd "C-=") 'er/expand-region))
+
 #+END_SRC
 ** Org-mode  
 #+BEGIN_SRC emacs-lisp
+  (use-package org-plus-contrib)
+
+  (use-package org-contacts
+    :ensure nil
+    :after org
+    :custom (org-contacts-files '("~/Dropbox/org/contacts.org")))
+
   (setq org-src-fontify-natively t)
 
   (org-babel-do-load-languages
@@ -139,6 +175,8 @@
      (shell . t)
      (http . t)
      (ammonite . t)))
+
+  (setq org-babel-python-command "python3")
 
   (use-package ob-ammonite)
 
@@ -224,6 +262,14 @@
           ("e" "Event" entry (file+headline "~/Dropbox/org/agenda/life.org" "Social Calendar")
            "* %?                :event:")
           ("t" "Todo" entry (file "~/Dropbox/org/agenda/inbox.org") "* TODO %?\n%U" :empty-lines 1)
+          ("c" "Contact" entry (file+headline "~/Dropbox/org/contacts.org" "Friends")
+           "* %^{Name}
+  :PROPERTIES:
+  :CITY: %^{City}
+  :BIRTHDAY: %^{DOB yyyy-mm-dd}
+  :EMAIL: %^{Email}
+  :NOTE: %^{NOTE}
+  :END:" :empty-lines 1)
           ;; ("m" "Tomorrow" entry (file "~/Dropbox/org/inbox") (paste))
           ))
 
@@ -245,26 +291,31 @@
 *** VC & magit
 #+BEGIN_SRC emacs-lisp
 
-(use-package magit
-  :commands (magit-status projectile-vc))
+  (use-package magit
+    :commands (magit-status projectile-vc))
 
-(defvar work-home-dir
-  (concat (getenv "HOME") "/b/"))
+  (defvar work-home-dir
+    (concat (getenv "HOME") "/b/"))
 
-;; Wrapper to clone a work repo
-(defun mine-magit-clone-banno (reponame)
-  "Clone REPO from github and put it in with the rest of the projects"
-  (interactive "MName of project: ")
-  (let ((repo-dir (concat work-home-dir reponame "/"))
-        (remote-repo (concat "git@github.com:banno/" reponame)))
-    (magit-clone remote-repo repo-dir)))
+  ;; Wrapper to clone a work repo
+  (defun mine-magit-clone-banno (reponame)
+    "Clone REPO from github and put it in with the rest of the projects"
+    (interactive "MName of project: ")
+    (let ((repo-dir (concat work-home-dir reponame "/"))
+          (remote-repo (concat "git@github.com:banno/" reponame)))
+      (magit-clone-regular remote-repo repo-dir)))
 
-(use-package browse-at-remote)
+  (defun mine-get-browse-at-remote-url ()
+    (interactive)
+    (kill-new (browse-at-remote-get-url)))
 
-(use-package ghub)
+  (use-package browse-at-remote)
 
-(use-package forge)
+  (use-package ghub)
+
+  (use-package forge)
 #+END_SRC
+
 *** Language independent
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
@@ -287,11 +338,14 @@
         (setq company-dabbrev-downcase nil)
         (setq company-idle-delay 0))
 
+      (use-package company-lsp)
+
       (use-package flycheck
         :init 
         (global-flycheck-mode))
 
       (use-package lsp-mode
+        :hook (scala-mode . lsp)
         :init (setq lsp-prefer-flymake nil))
 
       (use-package lsp-ui
@@ -299,9 +353,7 @@
 
       (use-package lsp-scala
         :after scala-mode
-        :demand t
-        ;; Optional - enable lsp-scala automatically in scala files
-        :hook (scala-mode . lsp))
+        :demand t)
 
       (use-package treemacs)
 
@@ -375,18 +427,6 @@
 
   (use-package ess)
 
-  (use-package lispy
-    :config
-    (setq lispy-compat '(edebug cider))
-
-    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-    (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1))))
-
-  ;; (use-package lispyville
-  ;;   
-  ;;   :config
-  ;;   (add-hook 'lispy-mode-hook #'lispyville-mode))
-
   (use-package clojure-mode)
 
   (use-package cider)
@@ -395,13 +435,40 @@
 
   (use-package terraform-mode)
 
+  (use-package slime
+    :config
+    (setq inferior-lisp-program "/usr/local/bin/sbcl")
+    (setq slime-contribs '(slime-fancy)))
+
 
   (defun mine-sbt-compile ()
     "I sure wish I knew how this works"
     (interactive)
     (sbt-command "compile"))
 
+  (defun mine-strip-src-main-from-path-regex (in)
+    (progn
+      (replace-regexp-in-string "\/src\/main\/scala\/" "" in)
+      (replace-regexp-in-string "\/src\/test\/scala\/" "" in)))
+
+  (defun mine-replace-slash-with-dot (in)
+    (replace-regexp-in-string "\/" "." in))
+
+  (defun mine-project-relative-file-path ()
+    "Return a string representing the relative path from whatever projectile thinks is the project root of the current buffer."
+    (file-name-directory (file-relative-name buffer-file-name (projectile-project-root))))
+
+  (defun mine-scala-package-from-path ()
+    "Chop off the /src/main/scala and format a package declaration string."
+    (if (stringp buffer-file-name)
+        (mine-replace-slash-with-dot (mine-strip-src-main-from-path-regex (mine-project-relative-file-path)))
+      (message "That aint right")))
+
+
+
+
 #+END_SRC
+
 ** Natural language
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
@@ -583,6 +650,7 @@
         "g r" 'browse-at-remote
         "g b" 'magit-blame
         "g f" 'magit-log-buffer-file
+        "g y" 'mine-get-browse-at-remote-url
 
         ;; buffer prefix
         "b b" 'helm-mini
@@ -697,13 +765,16 @@
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
     (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+    (define-key evil-normal-state-map (kbd "C-/") 'evil-avy-goto-char-timer)
 
     (define-key evil-visual-state-map (kbd "s") 'evil-surround-reion)
+
 
     (define-key evil-insert-state-map ["C-w"] 'backward-kill-word)
     (define-key evil-insert-state-map (kbd "C-\\") 'yas-expand)
 
     (define-key evil-motion-state-map "\t" nil)
+
 
     (use-package evil-escape
       :config
@@ -768,20 +839,27 @@
     "m d" 'org-todo
     "m h" 'org-toggle-heading
     "m a" 'org-archive-subtree-default
-    "m A" 'org-archive-done-tasks)
+    "m A" 'org-archive-done-tasks
+
+    "s h" 'helm-org-in-buffer-headings)
+
+
 
   (evil-leader/set-key-for-mode 'clojure-mode
     "l s" 'cider-eval-last-sexp)
 
-  (defun mine-lisp-keys ()
-    "Major mode bindings for .el."
-    (evil-leader/set-key
-      ;; git prefix
-      "m f" 'load-file
-      "m s" 'eval-last-sexp))
+  ;; (defun mine-lisp-keys ()
+  ;;   "Major mode bindings for .el."
+  ;;   (evil-leader/set-key
+  ;;     ;; git prefix
+  ;;     "m f" 'load-file
+  ;;     "m s" 'eval-last-sexp)
+  ;;   (define-key evil-normal-state-map (kbd ">)") 'sp-forward-slurp-sexp)
+  ;;   (define-key evil-normal-state-map (kbd ">(" 'sp-backward-barf-sexp))
+  ;;   (define-key evil-normal-state-map (kbd "<)" 'sp-forward-barf-sexp))
+  ;;   (define-key evil-normal-state-map (kbd "<(" 'sp-backward-slurp-sexp)))
 
-  (add-hook 'emacs-list-mode-hook 'mine-lisp-keys)
-
+  ;; (add-hook 'emacs-lisp-mode-hook 'mine-lisp-keys)
 #+END_SRC
 
 ** Platform-specific stuff
