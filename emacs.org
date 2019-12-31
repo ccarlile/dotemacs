@@ -158,13 +158,6 @@
 #+END_SRC
 ** Org-mode  
 #+BEGIN_SRC emacs-lisp
-  (use-package org-plus-contrib)
-
-  (use-package org-contacts
-    :ensure nil
-    :after org
-    :custom (org-contacts-files '("~/Dropbox/org/contacts.org")))
-
   (setq org-src-fontify-natively t)
 
   (org-babel-do-load-languages
@@ -335,10 +328,14 @@
         :init (global-company-mode)
         :config
         (add-to-list 'company-backends 'company-elm)
+        (add-to-list 'company-backends 'company-yasnippet)
         (setq company-dabbrev-downcase nil)
         (setq company-idle-delay 0))
 
-      (use-package company-lsp)
+      (use-package company-lsp
+        :config
+        (setq company-lsp-enable-snippet t
+              company-lsp-cache-candidates t))
 
       (use-package flycheck
         :init 
@@ -350,10 +347,6 @@
 
       (use-package lsp-ui
         :hook (lsp-mode . lsp-ui-mode))
-
-      (use-package lsp-scala
-        :after scala-mode
-        :demand t)
 
       (use-package treemacs)
 
@@ -378,6 +371,8 @@
 
 
   (use-package sbt-mode
+    :custom
+    (sbt:program-options '("-Dsbt.supershell=false"))
     :config
     (substitute-key-definition
      'minibuffer-complete-word
@@ -623,6 +618,10 @@
   (use-package md4rd
     :config
     (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
+
+  (use-package wttrin
+    :config
+    (setq wttrin-default-cities '("Memphis" "Los Angeles" "Chicaco")))
 #+END_SRC
 ** Evil
 #+BEGIN_SRC emacs-lisp
