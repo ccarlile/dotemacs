@@ -153,7 +153,8 @@
 
      (use-package expand-region
        :config
-       (global-set-key (kbd "C-=") 'er/expand-region))
+       (global-set-key (kbd "C-=") 'er/expand-region)
+       (global-set-key (kbd "C-M-=") 'er/contract-region))
 
 #+END_SRC
 ** Org-mode  
@@ -162,8 +163,7 @@
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((scala . t)
-     ;; (javascript . t)
+   '(;; (javascript . t)
      (python . t)
      (shell . t)
      (http . t)
@@ -235,7 +235,9 @@
 
   (setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
                                "~/Dropbox/org/agenda/inbox.org"
-                               "~/Dropbox/org/agenda/benntoo.org"
+                               "~/Dropbox/org/agenda/van.org"
+                               "~/Dropbox/org/agenda/machine.org"
+                               "~/Dropbox/org/agenda/vixtor.org"
                                "~/b/org/banno.org"))
 
   (setq org-default-notes-file "~/Dropbox/org/agenda/inbox.org")
@@ -268,7 +270,7 @@
 
   ;; GTD-style org keywords
   (setq org-todo-keywords
-        '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED")))
+        '((sequence "TODO" "NEXT" "WAITING" "|" "DONE" "INACTIVE" "CANCELLED" "SOMEDAY")))
 
   (setq org-src-tab-acts-natively t)
 
@@ -329,6 +331,7 @@
         :config
         (add-to-list 'company-backends 'company-elm)
         (add-to-list 'company-backends 'company-yasnippet)
+        (setq company-backends (remove 'company-ensime company-backends))
         (setq company-dabbrev-downcase nil)
         (setq company-idle-delay 0))
 
@@ -525,7 +528,7 @@
   (setq ring-bell-function 'ignore)
 
   (set-face-attribute 'default nil :font  "Hasklig-14")
-  (set-frame-font "Hasklig-10" nil t)
+  (set-frame-font "Hasklig-12" nil t)
 
   (use-package moody
     :config
@@ -795,6 +798,8 @@
 
     (use-package evil-collection
       :after evil
+      :custom
+      (evil-collection-company-use-tng nil)
       :config
       (setq evil-want-keybinding nil)
       (evil-collection-init))
