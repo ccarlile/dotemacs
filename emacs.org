@@ -160,18 +160,18 @@
 ** Org-mode  
 #+BEGIN_SRC emacs-lisp
   (setq org-src-fontify-natively t)
-
+  (use-package ob-ammonite)
+  (use-package ob-http)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(;; (javascript . t)
      (python . t)
      (shell . t)
-     (http . t)
      (ammonite . t)))
 
   (setq org-babel-python-command "python3")
 
-  (use-package ob-ammonite)
+
 
   (defun org-archive-done-tasks ()
     "Archive all headings in a subtree"
@@ -232,17 +232,19 @@
     ;; (setq org-mind-map-engine "circo")  ; Circular Layout
     )
 
-
-  (setq org-agenda-files (list "~/Dropbox/org/agenda/life.org"
+  (setq mine-org-buckets (list "~/Dropbox/org/agenda/life.org"
                                "~/Dropbox/org/agenda/inbox.org"
                                "~/Dropbox/org/agenda/van.org"
                                "~/Dropbox/org/agenda/machine.org"
-                               "~/Dropbox/org/agenda/vixtor.org"
-                               "~/b/org/banno.org"))
+                               "~/Dropbox/org/agenda/circus.org"
+                               "~/Dropbox/org/agenda/vixtor.org"))
+
+  (setq org-agenda-files (cons "~/Dropbox/org/agenda/agenda.org" mine-org-buckets))
 
   (setq org-default-notes-file "~/Dropbox/org/agenda/inbox.org")
 
   (setq org-refile-targets '((nil :maxlevel . 9)
+                             (mine-org-buckets :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9)))
 
                                           ; Refile in a single go
@@ -278,10 +280,8 @@
 
   (setq org-image-actual-width '(300))
 
-  (use-package ob-http)
 
 #+END_SRC
-
 ** Programming
 *** VC & magit
 #+BEGIN_SRC emacs-lisp
