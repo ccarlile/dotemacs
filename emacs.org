@@ -168,9 +168,16 @@
        (global-set-key (kbd "C-=") 'er/expand-region)
        (global-set-key (kbd "C-M-=") 'er/contract-region))
 
+     (use-package direnv
+       :config
+       (direnv-mode))
 #+END_SRC
 ** Org-mode  
 #+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (require 'org-tempo))
+
   (setq org-src-fontify-natively t)
   (use-package ob-ammonite)
   (use-package ob-http)
@@ -179,7 +186,8 @@
    'org-babel-load-languages
     '((python . t)
      (shell . t)
-     (ammonite . t)))
+     (ammonite . t)
+     (lisp . t)))
 
   (setq org-babel-python-command "python3")
 
@@ -297,24 +305,33 @@
 
       (use-package smartparens
         :config
-        (smartparens-global-mode t))
+        (smartparens-global-mode t)
+        (require 'smartparens-config)
+        :hook
+        (lisp-mode . smartparens-strict-mode))
 
-      (use-package evil-smartparens)
+      ;; (use-package evil-smartparens
+      ;;   :hook
+      ;;   (lisp-mode . smartparens-strict-mode))
+
+      (use-package evil-cleverparens
+        :hook
+        (lisp-mode . evil-cleverparens-mode))
 
       (use-package company
-        :defer t
         :init (global-company-mode)
         :config
-        (add-to-list 'company-backends 'company-elm)
-        (add-to-list 'company-backends 'company-yasnippet)
-        (setq company-backends (remove 'company-ensime company-backends))
-        (setq company-dabbrev-downcase nil)
-        (setq company-idle-delay 0))
+        (setq company-idle-delay 0.1))
+      ;;   :config
+      ;;   (add-to-list 'company-backends 'company-elm)
+      ;;   (add-to-list 'company-backends 'company-yasnippet)
+      ;;   (setq company-dabbrev-downcase nil)
+      ;;   (setq company-idle-delay 0))
 
-      (use-package company-lsp
-        :config
-        (setq company-lsp-enable-snippet t
-              company-lsp-cache-candidates t))
+      ;; (use-package company-lsp
+      ;;   :config
+        ;; (setq company-lsp-enable-snippet t
+        ;;       company-lsp-cache-candidates t))
 
       (use-package flycheck
         :init 
@@ -409,10 +426,18 @@
 
   (use-package terraform-mode)
 
-  (use-package slime
+  (use-package sly
     :config
-    (setq inferior-lisp-program "/usr/local/bin/sbcl")
-    (setq slime-contribs '(slime-fancy)))
+    ;; (require 'sly-autoloads)
+    (setq inferior-lisp-program "/run/current-system/sw/bin/sbcl"))
+
+  ;; (use-package slime
+  ;;   :config
+  ;;   (setq inferior-lisp-program "/run/current-system/sw/bin/sbcl")
+  ;;   (setq slime-contribs '(slime-fancy slime-company)))
+
+  ;; (use-package slime-company
+  ;;   :after (slime company))
 
 
   (defun mine-sbt-compile ()
@@ -441,6 +466,7 @@
 
   (use-package typescript-mode)
 
+  (use-package vue-mode)
 
 #+END_SRC
 
@@ -789,14 +815,6 @@
     (use-package evil-matchit
       :after evil
       :config (global-evil-matchit-mode))
-
-    (use-package evil-collection
-      :after evil
-      :custom
-      (evil-collection-company-use-tng nil)
-      :config
-      (setq evil-want-keybinding nil)
-      (evil-collection-init))
 
     (use-package evil-avy
       :after evil
