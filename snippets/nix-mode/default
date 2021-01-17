@@ -1,0 +1,15 @@
+# Author: Chris Carlile
+# name: default
+# key: default
+# --
+
+with import <nixpkgs> {};
+stdenv.mkDerivation {
+  name = "${1:name}";
+  buildInputs = [
+    ${2:nodejs}
+  ];
+  shellHook = ''
+    export PATH="$PWD/node_modules/.bin/:$PATH"
+  '';
+}
